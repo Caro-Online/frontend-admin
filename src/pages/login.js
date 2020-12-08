@@ -14,9 +14,9 @@ import {
   SvgIcon,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ReactComponent as Facebook } from "./static/facebook.svg";
-import { ReactComponent as Google } from "./static/google.svg";
-// import { useHistory } from "react-router-dom";
+import { ReactComponent as Facebook } from "../static/facebook.svg";
+import { ReactComponent as Google } from "../static/google.svg";
+import { useHistory } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   paper: {
     paddingTop: theme.spacing(8),
@@ -55,12 +55,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  // const history = useHistory();
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const signIn = async (provider) => {
     setIsLoading(true);
+    history.push("/dashboard");
   };
 
   const onFacebookSignIn = () => {
@@ -74,6 +75,7 @@ export default function SignIn() {
   const onSignIn = (e) => {
     e.preventDefault();
     setIsLoading(true);
+    history.push("/");
   };
 
   return (
