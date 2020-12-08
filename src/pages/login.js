@@ -17,6 +17,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ReactComponent as Facebook } from "../static/facebook.svg";
 import { ReactComponent as Google } from "../static/google.svg";
 import { useHistory } from "react-router-dom";
+import { login } from "../repositories/auth";
+import { notify } from "../components/toast";
+// import { ToastContainer, toast } from "react-toastify";
 const useStyles = makeStyles((theme) => ({
   paper: {
     paddingTop: theme.spacing(8),
@@ -61,6 +64,7 @@ export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const signIn = async (provider) => {
     setIsLoading(true);
+
     history.push("/dashboard");
   };
 
@@ -74,13 +78,32 @@ export default function SignIn() {
 
   const onSignIn = (e) => {
     e.preventDefault();
+    notify("hahaahah", "success");
     setIsLoading(true);
-    history.push("/");
+    const data = {
+      email,
+      password,
+    };
+    login(data)
+      .then((res) => {
+        setIsLoading(true);
+        // notify("Logins success!", "success");
+        if (res.data) {
+          history.push("/");
+        }
+      })
+      .catch((error) => {
+        // toast(error);
+        setIsLoading(false);
+        // notify(error, "error");
+        console.error(error);
+      });
   };
 
   return (
     <Container maxWidth="xs">
       <CssBaseline />
+
       <div className={classes.paper}>
         <Card>
           <CardHeader
@@ -148,18 +171,6 @@ export default function SignIn() {
               >
                 Log in
               </Button>
-              <Grid
-                container
-                direction="row"
-                justify="flex-end"
-                alignItems="center"
-              >
-                <Grid item>
-                  <Link href="/signup" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
             </form>
           </CardContent>
           <CardActions>
