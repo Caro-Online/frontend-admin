@@ -19,7 +19,8 @@ import { ReactComponent as Google } from "../static/google.svg";
 import { useHistory } from "react-router-dom";
 import { login, signinWithGoogle, signinWithFacebook } from "../services/auth";
 import { notify } from "../components/toast";
-// import { ToastContainer, toast } from "react-toastify";
+import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 const useStyles = makeStyles((theme) => ({
   paper: {
     paddingTop: theme.spacing(8),
@@ -62,23 +63,9 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const signIn = async (provider) => {
-    setIsLoading(true);
-
-    history.push("/dashboard");
-  };
-
-  const onFacebookSignIn = () => {
-    signIn();
-  };
-
-  const onGoogleSignIn = () => {
-    signIn();
-  };
-
-  const responseSuccessGoogle = (response) => {
+  const responseGoogle = (response) => {
+    console.log(`responseGoogle`, response);
     const { tokenId } = response;
-
     signinWithGoogle(tokenId)
       .then((res) => {
         console.log(res.data);
@@ -89,6 +76,7 @@ export default function SignIn() {
   };
 
   const responseFacebook = (response) => {
+    console.log(`responseFacebook`, response);
     const { userID, accessToken } = response;
     signinWithFacebook(userID, accessToken)
       .then((res) => {
@@ -101,7 +89,6 @@ export default function SignIn() {
 
   const onSignIn = (e) => {
     e.preventDefault();
-    // notify("hahaahah", "success");
     setIsLoading(true);
     const data = {
       email,
@@ -111,6 +98,7 @@ export default function SignIn() {
       .then((res) => {
         setIsLoading(false);
         notify("Logins success!", "success");
+        // Todo: Save cookie in here then do authentication
         console.log(res);
         if (res.data) {
           history.push("/");
@@ -197,39 +185,60 @@ export default function SignIn() {
             </form>
           </CardContent>
           <CardActions>
-            <Button
-              type="submit"
-              fullWidth
-              variant="outlined"
-              size="large"
-              color="secondary"
-              className={classes.googleButton}
-              startIcon={
-                <SvgIcon>
-                  <Google />
-                </SvgIcon>
-              }
-              onClick={onGoogleSignIn}
-              disabled={isLoading}
-            >
-              Google
-            </Button>
-            <Button
-              type="submit"
-              fullWidth
-              variant="outlined"
-              size="large"
-              className={classes.facebookButton}
-              startIcon={
+            <GoogleLogin
+              clientId="990188398227-bb3t5mt068kdj4350d3mvmqhcqeftkl8.apps.googleusercontent.com"
+              render={(renderProps) => (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  size="large"
+                  color="secondary"
+                  className={classes.googleButton}
+                  startIcon={
+                    <SvgIcon>
+                      <Google />
+                    </SvgIcon>
+                  }
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  Google
+                </Button>
+              )}
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+            <FacebookLogin
+              appId="1088597931155576"
+              fields="id,name,email"
+              callback={responseFacebook}
+              icon={
                 <SvgIcon>
                   <Facebook />
                 </SvgIcon>
               }
-              onClick={onFacebookSignIn}
-              disabled={isLoading}
-            >
-              facebook
-            </Button>
+              render={(renderProps) => (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  size="large"
+                  className={classes.facebookButton}
+                  startIcon={
+                    <SvgIcon>
+                      <Facebook />
+                    </SvgIcon>
+                  }
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >
+                  facebook
+                </Button>
+              )}
+            />
           </CardActions>
         </Card>
       </div>
