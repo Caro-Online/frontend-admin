@@ -17,7 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ReactComponent as Facebook } from "../static/facebook.svg";
 import { ReactComponent as Google } from "../static/google.svg";
 import { useHistory } from "react-router-dom";
-import { login } from "../repositories/auth";
+import { login, signinWithGoogle, signinWithFacebook } from "../services/auth";
 import { notify } from "../components/toast";
 // import { ToastContainer, toast } from "react-toastify";
 const useStyles = makeStyles((theme) => ({
@@ -76,9 +76,32 @@ export default function SignIn() {
     signIn();
   };
 
+  const responseSuccessGoogle = (response) => {
+    const { tokenId } = response;
+
+    signinWithGoogle(tokenId)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const responseFacebook = (response) => {
+    const { userID, accessToken } = response;
+    signinWithFacebook(userID, accessToken)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const onSignIn = (e) => {
     e.preventDefault();
-    notify("hahaahah", "success");
+    // notify("hahaahah", "success");
     setIsLoading(true);
     const data = {
       email,
@@ -86,16 +109,16 @@ export default function SignIn() {
     };
     login(data)
       .then((res) => {
-        setIsLoading(true);
-        // notify("Logins success!", "success");
+        setIsLoading(false);
+        notify("Logins success!", "success");
+        console.log(res);
         if (res.data) {
           history.push("/");
         }
       })
       .catch((error) => {
-        // toast(error);
         setIsLoading(false);
-        // notify(error, "error");
+        notify(error.message, "error");
         console.error(error);
       });
   };
