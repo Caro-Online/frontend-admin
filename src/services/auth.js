@@ -14,14 +14,14 @@ export const login = (user) => {
   });
 };
 
-export const signinWithGoogle = (tokenId) => {
-  return axios.post(`${API}/admin/auth/signin/google`, { tokenId });
-};
-export const signinWithFacebook = (userID, name, email, accessToken) => {
-  return axios.post(`${API}/admin/auth/signin/facebook`, {
-    userID,
-    name,
-    email,
-    accessToken,
-  });
-};
+// export const signinWithGoogle = (tokenId) => {
+//   return axios.post(`${API}/admin/auth/signin/google`, { tokenId });
+// };
+// export const signinWithFacebook = (userID, name, email, accessToken) => {
+//   return axios.post(`${API}/admin/auth/signin/facebook`, {
+//     userID,
+//     name,
+//     email,
+//     accessToken,
+//   });
+// };
