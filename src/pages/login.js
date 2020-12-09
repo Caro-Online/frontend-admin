@@ -71,13 +71,20 @@ export default function SignIn(props) {
 
   const responseGoogle = (response) => {
     console.log(`responseGoogle`, response);
+    setIsLoading(true);
     const { tokenId } = response;
     signinWithGoogle(tokenId)
       .then((res) => {
         console.log(res.data);
+        notify("Logins success!", "success");
+        setAuthTokens(tokenId);
+        setLoggedIn(true);
+        setIsLoading(true);
       })
       .catch((error) => {
-        console.log(error);
+        setIsLoading(false);
+        notify(error.message, "error");
+        console.error(error);
       });
   };
 

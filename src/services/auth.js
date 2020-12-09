@@ -4,7 +4,7 @@ import { API } from "../configs/api";
 export const login = (user) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`${API}/user/auth/login`, user)
+      .post(`${API}/admin/auth/login`, user)
       .then((res) => {
         resolve(res);
       })
@@ -15,10 +15,10 @@ export const login = (user) => {
 };
 
 export const signinWithGoogle = (tokenId) => {
-  return axios.post(`${API}/user/auth/signin/google`, { tokenId });
+  return axios.post(`${API}/admin/auth/signin/google`, { tokenId });
 };
 export const signinWithFacebook = (userID, name, email, accessToken) => {
-  return axios.post(`${API}/user/auth/signin/facebook`, {
+  return axios.post(`${API}/admin/auth/signin/facebook`, {
     userID,
     name,
     email,
