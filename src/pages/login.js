@@ -21,6 +21,8 @@ import { login, signinWithGoogle, signinWithFacebook } from "../services/auth";
 import { notify } from "../components/toast";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { useAuth } from "../context/auth";
+import { Redirect } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   paper: {
     paddingTop: theme.spacing(8),
@@ -57,12 +59,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const { setAuthTokens } = useAuth();
+  const referer = props.location?.state?.referer || "/";
+
   const responseGoogle = (response) => {
     console.log(`responseGoogle`, response);
     const { tokenId } = response;
@@ -99,10 +105,9 @@ export default function SignIn() {
         setIsLoading(false);
         notify("Logins success!", "success");
         // Todo: Save cookie in here then do authentication
-        console.log(res);
-        if (res.data) {
-          history.push("/");
-        }
+        const accessToken = res.data.accessToken;
+        setAuthTokens(accessToken);
+        setLoggedIn(true);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -111,6 +116,9 @@ export default function SignIn() {
       });
   };
 
+  if (isLoggedIn) {
+    return <Redirect to={referer} />;
+  }
   return (
     <Container maxWidth="xs">
       <CssBaseline />

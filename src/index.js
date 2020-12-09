@@ -4,14 +4,8 @@ import "./index.css";
 
 import Layout from "./layouts/index";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
 
-ReactDOM.render(
-  <BrowserRouter>
-    <Layout />
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+ReactDOM.render(<Layout />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
