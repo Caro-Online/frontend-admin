@@ -6,10 +6,11 @@ import NotFound from 'src/pages/not-found';
 import Dashboard from 'src/pages/index';
 import Users, { UserDetails } from 'src/pages/users';
 import Matches, { MatchDetails } from 'src/pages/matches';
-const routes = [
+
+const routes = (isLoggedIn) => [
   {
     path: '/',
-    element: <DashboardLayout />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'matches', element: <Matches /> },
@@ -20,9 +21,12 @@ const routes = [
     ],
   },
   {
-    path: '/login',
-    element: <DefaultLayout />,
-    children: [{ path: '', element: <Login /> }],
+    path: '/',
+    element: !isLoggedIn ? <DefaultLayout /> : <Navigate to="/dashboard" />,
+    children: [
+      { path: 'login', element: <Login /> },
+      { path: '/', element: <Navigate to="/login" /> },
+    ],
   },
 ];
 
