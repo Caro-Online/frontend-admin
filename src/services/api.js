@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BaseUrl } from '../configs/api';
+const AUTH_TOKEN = localStorage.getItem('token');
 const configs = {
   baseURL: BaseUrl,
   timeout: 5000,
@@ -8,7 +9,6 @@ const configs = {
     'X-Requested-With': 'XMLHttpRequest',
   },
 };
-const AUTH_TOKEN = sessionStorage.getItem('tokens');
 
 export const axiosInstance = axios.create(configs);
 

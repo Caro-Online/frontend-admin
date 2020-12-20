@@ -14,7 +14,7 @@ function PrivateRoute({ element: Element, ...rest }) {
     // />
     <Route
       {...rest}
-      render={(props) =>
+      children={(props) =>
         authTokens ? <Element {...props} /> : <Navigate to="/login" />
       }
     />

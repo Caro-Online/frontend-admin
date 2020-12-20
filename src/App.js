@@ -1,5 +1,5 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import React, { useState, useSelector } from 'react';
+import React, { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
@@ -10,12 +10,12 @@ import { ToastContainer } from 'src/components/toast';
 const App = () => {
   const [authTokens, setAuthTokens] = useState();
   const [userInfo, setUserInfo] = useState(null);
-  const routing = useRoutes(routes(authTokens));
   const setTokens = (data) => {
     console.log(`setTokens`, data);
-    localStorage.setItem('tokens', JSON.stringify(data));
+    localStorage.setItem('token', data);
     setAuthTokens(data);
   };
+  const routing = useRoutes(routes(authTokens));
   const setUser = (data) => {
     console.log('setUserInfor', data);
     localStorage.setItem('__user', JSON.stringify(data));

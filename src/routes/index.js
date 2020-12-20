@@ -13,8 +13,16 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'dashboard', element: <Dashboard /> },
-      { path: 'matches', element: <Matches /> },
-      { path: 'users', element: <Users /> },
+      {
+        path: 'matches',
+        element: <Matches />,
+      },
+      { path: 'matches/:matchId', element: <MatchDetails /> },
+      {
+        path: 'users',
+        element: <Users />,
+      },
+      { path: 'users/:userId', element: <UserDetails /> },
       { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to="/dashboard" /> },
       { path: '*', element: <Navigate to="/404" /> },

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Drawer,
   Hidden,
@@ -29,12 +28,22 @@ const items = [
   {
     href: '/matches',
     icon: TargetIcon,
-    title: 'Matched',
+    title: 'Matches',
+  },
+  {
+    href: '/matches/123',
+    icon: TargetIcon,
+    title: 'Match Details',
   },
   {
     href: '/users',
     icon: UsersIcon,
     title: 'Users',
+  },
+  {
+    href: '/users/123',
+    icon: UsersIcon,
+    title: 'User Details',
   },
   {
     href: '/profile',

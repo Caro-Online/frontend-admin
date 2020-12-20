@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, makeStyles } from '@material-ui/core';
-import Results from './results';
-import Toolbar from './toolbar';
-import data from './data';
+import Results from 'src/components/users/results';
+import Toolbar from 'src/components/users/toolbar';
+import data from 'src/components/users/data';
 import UserDetails from './id';
-
+import { axiosInstance } from 'src/services/api';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -14,9 +14,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const AUTH_TOKEN = localStorage.getItem('token');
 const CustomerListView = () => {
   const classes = useStyles();
   const [customers] = useState(data);
+
+  const getUsersList = () => {
+    axiosInstance.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${AUTH_TOKEN}`;
+    axiosInstance
+      .get('/user')
+      .then((data) => {
+        console.log(`getUsersList`, data);
+      })
+      .catch((err) => console.error(err));
+  };
+  useEffect(() => {
+    getUsersList();
+  }, []);
 
   return (
     <Container maxWidth={false}>
