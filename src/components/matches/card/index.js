@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   makeStyles,
+  Button,
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
+    '&:hover': {
+      backgroundColor: '#E8FCF6',
+    },
   },
   statsItem: {
     alignItems: 'center',
@@ -26,43 +30,49 @@ const useStyles = makeStyles((theme) => ({
   statsIcon: {
     marginRight: theme.spacing(1),
   },
+  content: {
+    padding: theme.spacing(1, 2),
+  },
+  actions: {
+    padding: theme.spacing(1, 2),
+  },
 }));
 
-const MatchCard = ({ className, product, ...rest }) => {
+const MatchCard = ({ className, match, ...rest }) => {
   const classes = useStyles();
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardContent>
-        <Box display="flex" justifyContent="center" mb={3}>
-          <Avatar alt="Product" src={product.media} variant="square" />
-        </Box>
+      <CardContent className={classes.content}>
         <Typography
-          align="center"
+          align="left"
           color="textPrimary"
           gutterBottom
-          variant="h4">
-          {product.title}
+          variant="caption">
+          {match.roomId}
         </Typography>
-        <Typography align="center" color="textPrimary" variant="body1">
-          {product.description}
+        <Typography align="left" color="textPrimary" variant="h4">
+          {match.name}
         </Typography>
       </CardContent>
       <Box flexGrow={1} />
       <Divider />
-      <Box p={2}>
+      <Box p={1}>
         <Grid container justify="space-between" spacing={2}>
           <Grid className={classes.statsItem} item>
-            <AccessTimeIcon className={classes.statsIcon} color="action" />
+            <AccessTimeIcon
+              fontSize="small"
+              className={classes.statsIcon}
+              color="action"
+            />
             <Typography color="textSecondary" display="inline" variant="body2">
-              Updated 2hr ago
+              {match.status}
             </Typography>
           </Grid>
           <Grid className={classes.statsItem} item>
-            <GetAppIcon className={classes.statsIcon} color="action" />
-            <Typography color="textSecondary" display="inline" variant="body2">
-              {product.totalDownloads} Downloads
-            </Typography>
+            <Button variant="outlined" color="secondary">
+              Join
+            </Button>
           </Grid>
         </Grid>
       </Box>
@@ -72,7 +82,7 @@ const MatchCard = ({ className, product, ...rest }) => {
 
 MatchCard.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default MatchCard;
