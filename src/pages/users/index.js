@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 const AUTH_TOKEN = localStorage.getItem('token');
 const CustomerListView = () => {
   const classes = useStyles();
-  const [customers] = useState(data);
+  const [users, setUsers] = useState([]);
 
   const getUsersList = () => {
     axiosInstance.defaults.headers.common[
@@ -25,8 +25,10 @@ const CustomerListView = () => {
     ] = `Bearer ${AUTH_TOKEN}`;
     axiosInstance
       .get('/user')
-      .then((data) => {
-        console.log(`getUsersList`, data);
+      .then((res) => {
+        const data = res.data;
+        setUsers(data.users);
+        console.log(`getUsersList`, users);
       })
       .catch((err) => console.error(err));
   };
@@ -38,7 +40,7 @@ const CustomerListView = () => {
     <Container maxWidth={false}>
       <Toolbar />
       <Box mt={3}>
-        <Results customers={customers} />
+        <Results users={users} />
       </Box>
     </Container>
   );
