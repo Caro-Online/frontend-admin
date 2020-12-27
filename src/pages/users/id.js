@@ -133,6 +133,7 @@ const UserDetails = () => {
 
   // State will be changed if URL changes
   const [user, isLoading] = useUserDetailApi(userId);
+  const [matches, isLoadingMatches] = useMatchedHistoryApi(userId);
 
   // Loading indicator
   if (isLoading)
@@ -295,53 +296,56 @@ const UserDetails = () => {
                 }
               />
               <CardContent className={classes.cardContent}>
-                {Array.from(Array(5), (e, i) => (
-                  <div key={i}>
-                    <Typography
-                      color="textSecondary"
-                      variant="body2"
-                      align="left">
-                      Jan 7, 2014
-                    </Typography>
-                    <Divider />
-                    <Card className={classes.rootActivity}>
-                      <CardMedia
-                        className={classes.cover}
-                        image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
-                        title="Live from space album cover"
-                      />
-                      <div className={classes.details}>
-                        <CardContent className={classes.content}>
-                          <Typography component="h5" variant="h5">
-                            Live From Space
-                          </Typography>
-                          <Typography variant="subtitle1" color="textSecondary">
-                            Mac Miller
-                          </Typography>
-                        </CardContent>
-                        <div className={classes.controls}>
-                          <IconButton aria-label="previous">
-                            {theme.direction === 'rtl' ? (
-                              <SkipNextIcon />
-                            ) : (
-                              <SkipPreviousIcon />
-                            )}
-                          </IconButton>
-                          <IconButton aria-label="play/pause">
-                            <PlayArrowIcon className={classes.playIcon} />
-                          </IconButton>
-                          <IconButton aria-label="next">
-                            {theme.direction === 'rtl' ? (
-                              <SkipPreviousIcon />
-                            ) : (
-                              <SkipNextIcon />
-                            )}
-                          </IconButton>
+                {matches &&
+                  matches.map((match) => (
+                    <div key={match._id}>
+                      <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        align="left">
+                        Jan 7, 2014
+                      </Typography>
+                      <Divider />
+                      <Card className={classes.rootActivity}>
+                        <CardMedia
+                          className={classes.cover}
+                          image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
+                          title="Live from space album cover"
+                        />
+                        <div className={classes.details}>
+                          <CardContent className={classes.content}>
+                            <Typography component="h5" variant="h5">
+                              Live From Space
+                            </Typography>
+                            <Typography
+                              variant="subtitle1"
+                              color="textSecondary">
+                              Mac Miller
+                            </Typography>
+                          </CardContent>
+                          <div className={classes.controls}>
+                            <IconButton aria-label="previous">
+                              {theme.direction === 'rtl' ? (
+                                <SkipNextIcon />
+                              ) : (
+                                <SkipPreviousIcon />
+                              )}
+                            </IconButton>
+                            <IconButton aria-label="play/pause">
+                              <PlayArrowIcon className={classes.playIcon} />
+                            </IconButton>
+                            <IconButton aria-label="next">
+                              {theme.direction === 'rtl' ? (
+                                <SkipPreviousIcon />
+                              ) : (
+                                <SkipNextIcon />
+                              )}
+                            </IconButton>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
+                      </Card>
+                    </div>
+                  ))}
               </CardContent>
             </Card>
 
@@ -378,4 +382,29 @@ export const useUserDetailApi = (userId) => {
 
   // Return 'isLoading' not the 'setIsLoading' function
   return [user, isLoading];
+};
+export const useMatchedHistoryApi = (userId) => {
+  const [matches, setMatches] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getMatchesByUserId = (userId) => {
+      if (!userId) return;
+      setIsLoading(true);
+      axiosInstance
+        .get(`/match/user/${userId}`)
+        .then((res) => {
+          const data = res.data;
+          setMatches(data.user);
+          setIsLoading(false);
+          console.log(`getMatchesByUserId`, data);
+        })
+        .catch((err) => console.error(err));
+    };
+    getMatchesByUserId(userId);
+    // Passing URL as a dependency
+  }, [userId]);
+
+  // Return 'isLoading' not the 'setIsLoading' function
+  return [matches, isLoading];
 };
