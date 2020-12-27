@@ -15,12 +15,14 @@ const App = () => {
     localStorage.setItem('token', data);
     setAuthTokens(data);
   };
-  const routing = useRoutes(routes(authTokens));
   const setUser = (data) => {
     console.log('setUserInfor', data);
     localStorage.setItem('__user', JSON.stringify(data));
     setUserInfo(data);
   };
+
+  const currentTokens = localStorage.getItem('token');
+  const routing = useRoutes(routes(currentTokens));
 
   return (
     <AuthContext.Provider
