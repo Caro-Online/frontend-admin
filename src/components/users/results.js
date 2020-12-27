@@ -17,6 +17,8 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import Skeleton from '@material-ui/lab/Skeleton';
+
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   tableCell: {},
 }));
 
-const Results = ({ className, users, ...rest }) => {
+const Results = ({ className, users, isLoading, ...rest }) => {
   const classes = useStyles();
   let navigate = useNavigate();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
@@ -70,45 +72,78 @@ const Results = ({ className, users, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.slice(0, limit).map((user) => (
-                <TableRow
-                  hover
-                  key={user._id}
-                  selected={selectedCustomerIds.indexOf(user._id) !== -1}
-                  onClick={(e) => onClickDetail(e, user._id)}>
+              {isLoading ? (
+                <TableRow>
                   <TableCell>
                     <Box alignItems="center" display="flex">
-                      <Avatar className={classes.avatar} src={user.avatarUrl}>
-                        {user.name
-                          .replace(/\s+/, ' ')
-                          .split(' ')
-                          .slice(0, 2)
-                          .map((v) => v && v[0].toUpperCase())
-                          .join('')}
-                      </Avatar>
-                      <Typography color="textPrimary" variant="body1">
-                        {user.name}
-                      </Typography>
+                      <Skeleton variant="circle" width={40} height={40} />
                     </Box>
                   </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.cup}</TableCell>
-                  <TableCell className={classes.tableCell}>
-                    {user.isOnline}
-                    <div className={classes.redDot}></div>
+                  <TableCell>
+                    <Skeleton animation="wave" />
                   </TableCell>
                   <TableCell>
-                    {moment(user.createdAt).format('DD/MM/YYYY')}
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell className={classes.tableCell}>
+                    <Skeleton animation="wave" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton animation="wave" width={60} />
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : users && users.length > 0 ? (
+                users.slice(0, limit).map((user) => (
+                  <TableRow
+                    hover
+                    key={user._id}
+                    selected={selectedCustomerIds.indexOf(user._id) !== -1}
+                    onClick={(e) => onClickDetail(e, user._id)}>
+                    <TableCell>
+                      <Box alignItems="center" display="flex">
+                        <Avatar className={classes.avatar} src={user.avatarUrl}>
+                          {user.name
+                            .replace(/\s+/, ' ')
+                            .split(' ')
+                            .slice(0, 2)
+                            .map((v) => v && v[0].toUpperCase())
+                            .join('')}
+                        </Avatar>
+                        <Typography color="textPrimary" variant="body1">
+                          {user.name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.cup}</TableCell>
+                    <TableCell className={classes.tableCell}>
+                      {user.isOnline}
+                      <div className={classes.redDot}></div>
+                    </TableCell>
+                    <TableCell>
+                      {moment(user.createdAt).format('DD/MM/YYYY')}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    <Typography
+                      color="textPrimary"
+                      variant="body1"
+                      align="center">
+                      Không tìm thấy user nào.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={users.length}
+        count={users?.length || 1}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}

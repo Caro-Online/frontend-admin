@@ -4,7 +4,6 @@ import MatchDetails from './id';
 import { Card, CardContent, Grid, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import MatchCard from 'src/components/matches/card';
-import data from 'src/components/matches/data';
 import axiosInstance from 'src/services/api';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,11 +25,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
 }));
-const AUTH_TOKEN = localStorage.getItem('token');
 const Matches = () => {
   const classes = useStyles();
-  const [products] = useState(data);
   const [matches, setMatches] = useState([]);
+  const AUTH_TOKEN = localStorage.getItem('token');
   const getMatchesList = () => {
     axiosInstance.defaults.headers.common[
       'Authorization'

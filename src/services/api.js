@@ -13,7 +13,7 @@ const configs = {
 
 const axiosInstance = axios.create(configs);
 
-axiosInstance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${AUTH_TOKEN}`;
 axiosInstance.interceptors.request.use(
   function (config) {
     config.headers = { ...config.headers };

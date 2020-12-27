@@ -31,9 +31,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, onSearch, ...rest }) => {
   const classes = useStyles();
 
+  const handleSearch = (keyword) => {
+    onSearch(keyword);
+  };
   return (
     <div className={clsx(classes.root, className)} {...rest}>
       <Box display="flex" justifyContent="flex-end">
@@ -58,6 +61,7 @@ const Toolbar = ({ className, ...rest }) => {
                 }}
                 placeholder="Search customer"
                 variant="outlined"
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </Box>
           </CardContent>
