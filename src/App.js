@@ -22,7 +22,7 @@ const App = () => {
   };
 
   const currentTokens = localStorage.getItem('token');
-  const routing = useRoutes(routes(currentTokens));
+  const routing = useRoutes(routes(authTokens));
 
   return (
     <AuthContext.Provider

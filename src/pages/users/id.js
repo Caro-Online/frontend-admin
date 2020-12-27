@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import {
@@ -6,7 +6,6 @@ import {
   Grid,
   Card,
   CardHeader,
-  CardActionArea,
   Avatar,
   CardContent,
   CardMedia,
@@ -15,12 +14,14 @@ import {
   IconButton,
   Divider,
 } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 import {
   AccessAlarm,
   SkipNext as SkipNextIcon,
   SkipPrevious as SkipPreviousIcon,
   PlayArrow as PlayArrowIcon,
 } from '@material-ui/icons';
+import axiosInstance from 'src/services/api';
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -122,153 +123,259 @@ const useStyles = makeStyles((theme) => ({
   name: {
     marginTop: theme.spacing(10),
     fontWeight: 900,
-    fontFamily: 'Poppins',
   },
 }));
 
 const UserDetails = () => {
-  let { userId } = useParams();
+  const { userId } = useParams();
   const classes = useStyles();
-
   const theme = useTheme();
+
+  // State will be changed if URL changes
+  const [user, isLoading] = useUserDetailApi(userId);
+
+  // Loading indicator
+  if (isLoading)
+    return (
+      <div>
+        <Skeleton variant="rect" height={118} />
+      </div>
+    );
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Card className={(classes.card, 'rounded-dynamic')}>
-            <CardMedia
-              className={classes.media}
-              image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
-              title="Contemplative Reptile"
-            />
+      {!isLoading && user && (
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Card className={(classes.card, 'rounded-dynamic')}>
+              <CardMedia
+                className={classes.media}
+                image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
+                title="Contemplative Reptile"
+              />
 
-            <CardContent className={classes.contentHeader}>
-              <div className={classes.rootAvatar}>
-                <StyledBadge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  variant="dot">
-                  <Avatar
-                    className={classes.large}
-                    alt="Remy Sharp"
-                    src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
-                  />
-                </StyledBadge>
-              </div>
-              <Typography
-                className={classes.name}
-                gutterBottom
-                variant="h3"
-                component="h3">
-                {userId}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <Card className={(classes.card, 'rounded-dynamic')}>
-            <CardHeader
-              title={
+              <CardContent className={classes.contentHeader}>
+                <div className={classes.rootAvatar}>
+                  <StyledBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    variant="dot">
+                    <Avatar
+                      className={classes.large}
+                      alt="Remy Sharp"
+                      src={
+                        user.imageUrl
+                          ? user.imageUrl
+                          : 'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+                      }
+                    />
+                  </StyledBadge>
+                </div>
                 <Typography
+                  className={classes.name}
+                  gutterBottom
                   variant="h3"
-                  component="h5"
-                  align="left"
-                  style={{ fontWeight: 'bold' }}>
-                  Intro
+                  component="h3">
+                  {/* {userId} */}
+                  {user.name}
                 </Typography>
-              }
-            />
-            <CardContent className={classes.cardContent}>
-              {/* <Typography gutterBottom variant="h5" component="h2">
-                {userId} - User Details Page
-              </Typography> */}
-
-              {Array.from(Array(5), (e, i) => (
-                <Grid key={i} container wrap="nowrap" spacing={2}>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item lg={4} xs={12}>
+            <Card className={(classes.card, 'rounded-dynamic')}>
+              <CardHeader
+                title={
+                  <Typography
+                    variant="h3"
+                    component="h5"
+                    align="left"
+                    style={{ fontWeight: 'bold' }}>
+                    Intro
+                  </Typography>
+                }
+              />
+              <CardContent className={classes.cardContent}>
+                {user.phone && (
+                  <Grid container wrap="nowrap" spacing={2}>
+                    <Grid item>
+                      <AccessAlarm color="disabled" />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography
+                        variant="subtitle1"
+                        component="h5"
+                        align="left">
+                        <strong style={{ color: 'lightgray' }}>Phone</strong>:{' '}
+                        {user.phone}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                <Grid container wrap="nowrap" spacing={2}>
                   <Grid item>
                     <AccessAlarm color="disabled" />
                   </Grid>
                   <Grid item xs>
                     <Typography variant="subtitle1" component="h5" align="left">
-                      Cúp: 200
+                      <strong style={{ color: 'lightgray' }}>Email</strong>:{' '}
+                      {user.email}
                     </Typography>
                   </Grid>
                 </Grid>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={8}>
-          <Card className={(classes.card, 'rounded-dynamic')}>
-            <CardHeader
-              title={
-                <Typography
-                  variant="h3"
-                  component="h5"
-                  align="left"
-                  style={{ fontWeight: 'bold' }}>
-                  Matches
-                </Typography>
-              }
-            />
-            <CardContent className={classes.cardContent}>
-              {Array.from(Array(5), (e, i) => (
-                <div key={i}>
+                <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item>
+                    <AccessAlarm color="disabled" />
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant="subtitle1" component="h5" align="left">
+                      <strong style={{ color: 'lightgray' }}>Cup</strong>:{' '}
+                      {user.cup}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item>
+                    <AccessAlarm color="disabled" />
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant="subtitle1" component="h5" align="left">
+                      <strong style={{ color: 'lightgray' }}>Won</strong>:{' '}
+                      {user.matchHaveWon}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item>
+                    <AccessAlarm color="disabled" />
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant="subtitle1" component="h5" align="left">
+                      <strong style={{ color: 'lightgray' }}>
+                        Match have played
+                      </strong>
+                      : {user.matchHavePlayed}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                {user.currentRoom && (
+                  <Grid container wrap="nowrap" spacing={2}>
+                    <Grid item>
+                      <AccessAlarm color="disabled" />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography
+                        variant="subtitle1"
+                        component="h5"
+                        align="left">
+                        <strong style={{ color: 'lightgray' }}>
+                          Current Room
+                        </strong>
+                        : {user.currentRoom}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item lg={8} xs={12}>
+            <Card className={(classes.card, 'rounded-dynamic')}>
+              <CardHeader
+                title={
                   <Typography
-                    color="textSecondary"
-                    variant="body2"
-                    align="left">
-                    Jan 7, 2014
+                    variant="h3"
+                    component="h5"
+                    align="left"
+                    style={{ fontWeight: 'bold' }}>
+                    Matches
                   </Typography>
-                  <Divider />
-                  <Card className={classes.rootActivity}>
-                    <CardMedia
-                      className={classes.cover}
-                      image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
-                      title="Live from space album cover"
-                    />
-                    <div className={classes.details}>
-                      <CardContent className={classes.content}>
-                        <Typography component="h5" variant="h5">
-                          Live From Space
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                          Mac Miller
-                        </Typography>
-                      </CardContent>
-                      <div className={classes.controls}>
-                        <IconButton aria-label="previous">
-                          {theme.direction === 'rtl' ? (
-                            <SkipNextIcon />
-                          ) : (
-                            <SkipPreviousIcon />
-                          )}
-                        </IconButton>
-                        <IconButton aria-label="play/pause">
-                          <PlayArrowIcon className={classes.playIcon} />
-                        </IconButton>
-                        <IconButton aria-label="next">
-                          {theme.direction === 'rtl' ? (
-                            <SkipPreviousIcon />
-                          ) : (
-                            <SkipNextIcon />
-                          )}
-                        </IconButton>
+                }
+              />
+              <CardContent className={classes.cardContent}>
+                {Array.from(Array(5), (e, i) => (
+                  <div key={i}>
+                    <Typography
+                      color="textSecondary"
+                      variant="body2"
+                      align="left">
+                      Jan 7, 2014
+                    </Typography>
+                    <Divider />
+                    <Card className={classes.rootActivity}>
+                      <CardMedia
+                        className={classes.cover}
+                        image="https://image.freepik.com/free-vector/watercolor-background_87374-69.jpg"
+                        title="Live from space album cover"
+                      />
+                      <div className={classes.details}>
+                        <CardContent className={classes.content}>
+                          <Typography component="h5" variant="h5">
+                            Live From Space
+                          </Typography>
+                          <Typography variant="subtitle1" color="textSecondary">
+                            Mac Miller
+                          </Typography>
+                        </CardContent>
+                        <div className={classes.controls}>
+                          <IconButton aria-label="previous">
+                            {theme.direction === 'rtl' ? (
+                              <SkipNextIcon />
+                            ) : (
+                              <SkipPreviousIcon />
+                            )}
+                          </IconButton>
+                          <IconButton aria-label="play/pause">
+                            <PlayArrowIcon className={classes.playIcon} />
+                          </IconButton>
+                          <IconButton aria-label="next">
+                            {theme.direction === 'rtl' ? (
+                              <SkipPreviousIcon />
+                            ) : (
+                              <SkipNextIcon />
+                            )}
+                          </IconButton>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                    </Card>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-          <Paper className={classes.paper}></Paper>
+            <Paper className={classes.paper}></Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </div>
   );
 };
 export default UserDetails;
+// Passing URL as a parameter
+export const useUserDetailApi = (userId) => {
+  const [user, setUser] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getUserDetail = () => {
+      if (!userId) return;
+      setIsLoading(true);
+      axiosInstance
+        .get(`/user/${userId}`)
+        .then((res) => {
+          const data = res.data;
+          setUser(data.user);
+          setIsLoading(false);
+          console.log(`getUserDetail`, data);
+        })
+        .catch((err) => console.error(err));
+    };
+    getUserDetail();
+    // Passing URL as a dependency
+  }, [userId]);
+
+  // Return 'isLoading' not the 'setIsLoading' function
+  return [user, isLoading];
+};

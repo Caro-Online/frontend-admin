@@ -1,4 +1,4 @@
-import { axiosInstance } from './api';
+import axiosInstance from './api';
 
 export const login = (user) => {
   return new Promise((resolve, reject) => {

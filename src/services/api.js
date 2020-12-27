@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BaseUrl } from '../configs/api';
+
 const AUTH_TOKEN = localStorage.getItem('token');
 const configs = {
   baseURL: BaseUrl,
@@ -10,7 +11,7 @@ const configs = {
   },
 };
 
-export const axiosInstance = axios.create(configs);
+const axiosInstance = axios.create(configs);
 
 axiosInstance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axiosInstance.interceptors.request.use(
@@ -36,3 +37,4 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+export default axiosInstance;

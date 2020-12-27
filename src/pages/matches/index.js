@@ -5,7 +5,7 @@ import { Card, CardContent, Grid, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import MatchCard from 'src/components/matches/card';
 import data from 'src/components/matches/data';
-import { axiosInstance } from 'src/services/api';
+import axiosInstance from 'src/services/api';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,

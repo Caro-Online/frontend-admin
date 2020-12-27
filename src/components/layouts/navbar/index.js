@@ -40,11 +40,11 @@ const items = [
     icon: UsersIcon,
     title: 'Users',
   },
-  {
-    href: '/users/123',
-    icon: UsersIcon,
-    title: 'User Details',
-  },
+  // {
+  //   href: '/users/123',
+  //   icon: UsersIcon,
+  //   title: 'User Details',
+  // },
   {
     href: '/profile',
     icon: UserIcon,

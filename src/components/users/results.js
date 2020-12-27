@@ -16,7 +16,7 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
-
+import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Results = ({ className, users, ...rest }) => {
   const classes = useStyles();
+  let navigate = useNavigate();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -50,7 +51,10 @@ const Results = ({ className, users, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
+  const onClickDetail = (e, userId) => {
+    console.log(`onClickDetail`, userId);
+    navigate(`/users/${userId}`);
+  };
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
@@ -70,7 +74,8 @@ const Results = ({ className, users, ...rest }) => {
                 <TableRow
                   hover
                   key={user._id}
-                  selected={selectedCustomerIds.indexOf(user._id) !== -1}>
+                  selected={selectedCustomerIds.indexOf(user._id) !== -1}
+                  onClick={(e) => onClickDetail(e, user._id)}>
                   <TableCell>
                     <Box alignItems="center" display="flex">
                       <Avatar className={classes.avatar} src={user.avatarUrl}>
@@ -116,7 +121,7 @@ const Results = ({ className, users, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default Results;

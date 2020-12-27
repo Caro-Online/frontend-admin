@@ -4,7 +4,7 @@ import Results from 'src/components/users/results';
 import Toolbar from 'src/components/users/toolbar';
 import data from 'src/components/users/data';
 import UserDetails from './id';
-import { axiosInstance } from 'src/services/api';
+import axiosInstance from 'src/services/api';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
