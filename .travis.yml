@@ -20,14 +20,14 @@ script:
   - yarn test
   - yarn build
   # build docker images
-  - docker build -t app/caro-admin .
-  - docker tag app/caro-admin registry.heroku.com/admin-caroo/web
+  - docker build -t vanhiep778/caro-admin .
+  - docker tag vanhiep778/caro-admin registry.heroku.com/admin-caroo/web
 
 deploy:
   provider: script
   script:
     # push to dockerhub & heroku
-    docker push app/caro-admin;
+    docker push vanhiep778/caro-admin;
     docker push registry.heroku.com/admin-caroo/web;
     heroku container:release web --app admin-caroo
   on:
