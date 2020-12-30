@@ -1,34 +1,50 @@
+# sudo: required
+# language: node_js
+# node_js:
+#   - '12'
+# services:
+#   - docker
+
+# before_install:
+#   # install heroku CLI
+#   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+#   # login to docker registries (dockerhub + heroku)
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#   - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
+
+# install:
+#   # install deps
+#   - yarn install
+
+# script:
+#   # - yarn test
+#   # - yarn build
+#   # build docker images
+#   - docker build -t vanhiep778/caro-admin .
+#   - docker tag vanhiep778/caro-admin registry.heroku.com/admin-caroo/web
+
+# deploy:
+#   provider: script
+#   script:
+#     # push to dockerhub & heroku
+#     docker push vanhiep778/caro-admin;
+#     docker push registry.heroku.com/admin-caroo/web;
+#     heroku container:release web --app admin-caroo
+#   on:
+#     branch: main
+language: generic
 sudo: required
-language: node_js
-node_js:
-  - '12'
+
 services:
   - docker
 
 before_install:
-  # install heroku CLI
-  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
-  # login to docker registries (dockerhub + heroku)
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
-
-install:
-  # install deps
-  - yarn install
+  - docker build -t vanhiep778/caro-admin -f Dockerfile .
 
 script:
-  # - yarn test
-  # - yarn build
-  # build docker images
-  - docker build -t vanhiep778/caro-admin .
-  - docker tag vanhiep778/caro-admin registry.heroku.com/admin-caroo/web
+  - docker run -e CI=true vanhiep778/caro-admin
 
-deploy:
-  provider: script
-  script:
-    # push to dockerhub & heroku
-    docker push vanhiep778/caro-admin;
-    docker push registry.heroku.com/admin-caroo/web;
-    heroku container:release web --app admin-caroo
-  on:
-    branch: main
+after_success:
+  - docker build -t vanhiep778/caro-admin .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push vanhiep778/caro-admin
