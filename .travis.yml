@@ -39,12 +39,22 @@ services:
   - docker
 
 before_install:
-  - docker build -t vanhiep778/caro-admin -f Dockerfile .
+  # install heroku CLI
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  # login to docker registries (dockerhub + heroku)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
 
 script:
-  - docker run -e CI=true vanhiep778/caro-admin
+  - docker build -t vanhiep778/caro-admin -f Dockerfile .
+  - docker tag vanhiep778/caro-admin registry.heroku.com/admin-caroo/web
 
-after_success:
-  - docker build -t vanhiep778/caro-admin .
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push vanhiep778/caro-admin
+deploy:
+  provider: script
+  script:
+    # push to dockerhub & heroku
+    docker push vanhiep778/caro-admin;
+    docker push registry.heroku.com/admin-caroo/web;
+    heroku container:release web --app admin-caroo
+  on:
+    branch: main
