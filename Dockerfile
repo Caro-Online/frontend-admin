@@ -1,17 +1,19 @@
-FROM node:14-alpine as base
+FROM node:9-alpine
 
-WORKDIR /src
-COPY package.json yarn.lock /src/
+# this makes the build fail in travis ! see https://github.com/nodejs/docker-node/issues/661
+# RUN npm install --global yarn
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install; \
+  yarn global add serve
+
+COPY . .
+RUN yarn build
+
+ENV NODE_ENV=production
 EXPOSE 3000
 
-FROM base as production
-ENV NODE_ENV=production
-RUN yarn ci
-COPY . /src
-CMD ["yarn", "start"]
 
-FROM base as dev
-ENV NODE_ENV=development
-RUN yarn install
-COPY . /src
-CMD ["yarn", "start"]
+CMD serve -p $PORT -s build
