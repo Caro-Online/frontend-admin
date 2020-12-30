@@ -54,7 +54,6 @@ deploy:
   script:
     # push to dockerhub & heroku
     docker push vanhiep778/caro-admin;
-    heroku container:login;
     docker push registry.heroku.com/admin-caroo/web;
     heroku container:release web --app admin-caroo
   on:
