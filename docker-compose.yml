@@ -1,13 +1,12 @@
 version: '3.8'
 services:
-  web:
+  client:
+    stdin_open: true
     build:
-      context: ./
-      target: dev
-    volumes:
-      - .:/src
-    command: npm start
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
-    environment:
-      NODE_ENV: dev
+    volumes:
+      - '/src/node_modules'
+      - './:/src'

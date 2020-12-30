@@ -20,7 +20,7 @@ script:
   - yarn test
   - yarn build
   # build docker images
-  - yarn build:docker
+  - docker build -t app/caro-admin .
   - docker tag app/caro-admin registry.heroku.com/admin-caroo/web
 
 deploy:
