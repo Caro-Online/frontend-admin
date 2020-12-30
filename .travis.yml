@@ -1,16 +1,15 @@
-language: node_js
 sudo: required
+ language: node_js
 node_js:
-  - '9'
+  - "9"
 services:
   - docker
 before_install:
-  - docker build --target=dev -t admin-docker -f Dockerfile .
-
+  # login to docker registries (dockerhub + heroku)
+  - echo "$ DOCKER_PASSWORD" | docker login -u "$ DOCKER_USERNAME" --password-stdin
+install:
+  # install deps
+  - yarn install
 script:
-  - docker run --rm --name admin -e CI=true -d -p 3000:3000 admin-docker
-
-after_success:
-  - docker build -t admin-docker .
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push  admin-docker
+  - yarn test
+  - yarn build
