@@ -6,6 +6,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Table,
   TableBody,
@@ -69,6 +70,7 @@ const Results = ({ className, users, isLoading, ...rest }) => {
                 <TableCell>Cup</TableCell>
                 <TableCell className={classes.tableCell}>Online</TableCell>
                 <TableCell>Registration date</TableCell>
+                <TableCell>State</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -78,6 +80,9 @@ const Results = ({ className, users, isLoading, ...rest }) => {
                     <Box alignItems="center" display="flex">
                       <Skeleton variant="circle" width={40} height={40} />
                     </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton animation="wave" />
                   </TableCell>
                   <TableCell>
                     <Skeleton animation="wave" />
@@ -122,6 +127,27 @@ const Results = ({ className, users, isLoading, ...rest }) => {
                     </TableCell>
                     <TableCell>
                       {moment(user.createdAt).format('DD/MM/YYYY')}
+                    </TableCell>
+                    <TableCell>
+                      {user?.isBlock ? (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          onClick={(e) => alert(e)}>
+                          Bỏ chặn
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="secondary"
+                          fullWidth
+                          onClick={(e) => alert(e)}>
+                          Chặn
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))

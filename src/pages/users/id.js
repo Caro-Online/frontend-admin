@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import {
-  Paper,
+  Button,
   Grid,
   Card,
   CardHeader,
@@ -124,6 +124,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(10),
     fontWeight: 900,
   },
+  emptyCard: {
+    border: '1px solid lightgrey',
+    minHeight: theme.spacing(10),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 const UserDetails = () => {
@@ -132,9 +139,15 @@ const UserDetails = () => {
   const theme = useTheme();
 
   // State will be changed if URL changes
-  const [user, isLoading] = useUserDetailApi(userId);
+  const [user, setUser, isLoading] = useUserDetailApi(userId);
   const [matches, isLoadingMatches] = useMatchedHistoryApi(userId);
-
+  const [userInfo, isLoadingUpdate] = useUpdateUserInfoApi(user);
+  const onBlockUser = (user) => {
+    console.log(`onBlockUser`, user);
+    const isBlock = !user.isBlock;
+    const updatedUser = Object.assign({}, user, { isBlock });
+    setUser(updatedUser);
+  };
   // Loading indicator
   if (isLoading)
     return (
@@ -279,6 +292,19 @@ const UserDetails = () => {
                     </Grid>
                   </Grid>
                 )}
+                <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color={user?.isBlock ? 'primary' : 'secondary'}
+                      fullWidth
+                      onClick={(e) => onBlockUser(user)}>
+                      <strong>
+                        {user?.isBlock ? 'Bỏ chặn' : 'Chặn truy cập'}
+                      </strong>
+                    </Button>
+                  </Grid>
+                </Grid>
               </CardContent>
             </Card>
           </Grid>
@@ -296,7 +322,9 @@ const UserDetails = () => {
                 }
               />
               <CardContent className={classes.cardContent}>
-                {matches &&
+                {isLoadingMatches ? (
+                  <Skeleton variant="rect" width={210} height={118} />
+                ) : matches && matches.length > 0 ? (
                   matches.map((match) => (
                     <div key={match._id}>
                       <Typography
@@ -345,11 +373,16 @@ const UserDetails = () => {
                         </div>
                       </Card>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <Card className={classes.emptyCard}>
+                    <Typography component="h5" variant="h5">
+                      <strong style={{ color: 'lightgray' }}>Trống</strong>
+                    </Typography>
+                  </Card>
+                )}
               </CardContent>
             </Card>
-
-            <Paper className={classes.paper}></Paper>
           </Grid>
         </Grid>
       )}
@@ -381,7 +414,7 @@ export const useUserDetailApi = (userId) => {
   }, [userId]);
 
   // Return 'isLoading' not the 'setIsLoading' function
-  return [user, isLoading];
+  return [user, setUser, isLoading];
 };
 export const useMatchedHistoryApi = (userId) => {
   const [matches, setMatches] = useState();
@@ -406,5 +439,32 @@ export const useMatchedHistoryApi = (userId) => {
   }, [userId]);
 
   // Return 'isLoading' not the 'setIsLoading' function
-  return [matches, isLoading];
+  return [matches, setMatches, isLoading];
+};
+
+export const useUpdateUserInfoApi = (user) => {
+  const [userInfo, setUserInfo] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const updateUserInfo = (user) => {
+      if (!user) return;
+      const userId = user._id;
+      if (!userId) return;
+      setIsLoading(true);
+      axiosInstance
+        .put(`/user/${userId}`, { user })
+        .then((res) => {
+          const data = res.data;
+          setUserInfo(data.user);
+          setIsLoading(false);
+          console.log(`updateUserInfo`, data);
+        })
+        .catch((err) => console.error(err));
+    };
+    updateUserInfo(user);
+    // Passing URL as a dependency
+  }, [user]);
+
+  // Return 'isLoading' not the 'setIsLoading' function
+  return [userInfo, isLoading];
 };
