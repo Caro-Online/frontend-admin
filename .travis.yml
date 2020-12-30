@@ -6,29 +6,12 @@ services:
   - docker
 
 before_install:
-  # install heroku CLI
-  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
-  # login to docker registries (dockerhub + heroku)
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
-
-install:
-  # install deps
-  - yarn install
+  - DOCKER_BUILDKIT=1 docker build --target=dev -t admin-docker -f Dockerfile.dev .
 
 script:
-  - yarn test
-  - yarn build
-  # build docker images
-  - yarn build:docker
-  - docker tag unqpdes/todo-list-front:latest registry.heroku.com/pdes-2018-todo-list-front/web
+  - docker run --rm --name admin -e CI=true -d -p 3000:3000 admin-docker
 
-deploy:
-  provider: script
-  script:
-    # push to dockerhub & heroku
-    docker push unqpdes/todo-list-front;
-    docker push registry.heroku.com/pdes-2018-todo-list-front/web;
-    heroku container:release web --app pdes-2018-todo-list-front
-  on:
-    branch: master
+after_success:
+  - docker build -t  admin-docker .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push  admin-docker
