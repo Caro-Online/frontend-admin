@@ -21,7 +21,7 @@ script:
   - yarn build
   # build docker images
   - yarn build:docker
-  - docker tag app/caro-admin:latest registry.heroku.com/admin-caroo/web
+  - docker tag app/caro-admin registry.heroku.com/admin-caroo/web
 
 deploy:
   provider: script
