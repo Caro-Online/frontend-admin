@@ -5,7 +5,7 @@ node_js:
 services:
   - docker
 before_install:
-  - docker build --target=dev -t admin-docker -f Dockerfile.dev .
+  - docker build --target=dev -t admin-docker -f Dockerfile .
 
 script:
   - docker run --rm --name admin -e CI=true -d -p 3000:3000 admin-docker
