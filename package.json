@@ -27,6 +27,7 @@
         "react-router-dom": "^6.0.0-beta.0",
         "react-scripts": "4.0.1",
         "react-toastify": "^6.1.0",
+        "react-window": "^1.8.6",
         "serve": "^11.3.2",
         "web-vitals": "^0.2.4"
     },
@@ -80,5 +81,5 @@
             "git add"
         ]
     },
-    "proxy": "https://api-serverr.herokuapp.com/"
+    "proxy": "http://localhost:4000/"
 }

@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Chat from 'src/components/chat';
+import AttendCard from 'src/components/matches/card/attend';
+import MatchesHistoryList from 'src/components/matches/list';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import axiosInstance from 'src/services/api';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,13 +17,27 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 900,
+    backgroundColor: 'gold',
   },
   header: {
     height: '16vh',
   },
+  userHeader: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   content: {
     height: '78vh',
+  },
+  summary: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 }));
 
@@ -31,19 +48,28 @@ const MatchDetails = () => {
   return (
     <div className={classes.root}>
       <Grid className={classes.header} container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>Thông tin người thắng</Paper>
+        <Grid className={classes.userHeader} item xs={12} sm={5}>
+          <AttendCard></AttendCard>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>Thông tin người thắng</Paper>
+        <Grid className={classes.userHeader} item xs={12} sm={2}>
+          <div className={classes.summary}>
+            <AccessTimeIcon />
+            <span style={{ marginTop: 8 }}>Đang diễn ra</span>
+          </div>
+        </Grid>
+        <Grid className={classes.userHeader} item xs={12} sm={5}>
+          <AttendCard></AttendCard>
         </Grid>
       </Grid>
       <Grid className={classes.content} container spacing={3}>
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12} sm={8}>
           <Chat></Chat>
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <Paper className={classes.paper}>Thông tin chi tiết trận đấu</Paper>
+        <Grid item xs={12} sm={4}>
+          <Paper className={classes.paper} variant="outlined" elevation={0}>
+            Danh sách các ván đấu
+          </Paper>
+          <MatchesHistoryList />
         </Grid>
       </Grid>
     </div>

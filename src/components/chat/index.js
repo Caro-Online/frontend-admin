@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Tabs,
   Tab,
@@ -8,11 +8,35 @@ import {
   Typography,
   Box,
   Paper,
+  Badge,
+  Avatar,
 } from '@material-ui/core';
 
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
+const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    color: 'black',
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(15),
+    marginRight: theme.spacing(1),
+    '&:focus': {
+      opacity: 1,
+    },
+  },
+}))((props) => <Tab disableRipple {...props} />);
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+  },
+}))(Badge);
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -68,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
   },
   typingChat: {
     position: 'absolute',
@@ -84,6 +109,12 @@ const useStyles = makeStyles((theme) => ({
   },
   iconButton: {
     padding: 10,
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'start',
   },
 }));
 
@@ -104,13 +135,63 @@ const Chat = () => {
         onChange={handleChange}
         aria-label="Vertical tabs example"
         className={classes.tabs}>
-        <Tab label="Item One" {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
-        <Tab label="Item Four" {...a11yProps(3)} />
-        <Tab label="Item Five" {...a11yProps(4)} />
-        <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} />
+        <StyledTab
+          classes={{ wrapper: classes.wrapper }}
+          icon={
+            <StyledBadge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              variant="dot">
+              <Avatar
+                alt="Remy Sharp"
+                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
+              />
+            </StyledBadge>
+          }
+          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
+          {...a11yProps(0)}
+        />
+        <StyledTab
+          classes={{ wrapper: classes.wrapper }}
+          icon={
+            <StyledBadge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              variant="dot">
+              <Avatar
+                alt="Remy Sharp"
+                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
+              />
+            </StyledBadge>
+          }
+          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
+          {...a11yProps(1)}
+        />
+        <StyledTab
+          classes={{ wrapper: classes.wrapper }}
+          icon={
+            <StyledBadge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              variant="dot">
+              <Avatar
+                alt="Remy Sharp"
+                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
+              />
+            </StyledBadge>
+          }
+          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
+          {...a11yProps(2)}
+        />
       </Tabs>
       <TabPanel value={value} index={0}>
         Item One
@@ -121,18 +202,7 @@ const Chat = () => {
       <TabPanel value={value} index={2}>
         Item Three
       </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
+
       <div className={classes.rootInput}>
         <InputBase
           className={classes.input}
