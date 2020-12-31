@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
+import Chat from 'src/components/chat';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(2),
-    height: '100vh',
+    height: '90vh',
   },
   paper: {
     padding: theme.spacing(2),
@@ -16,10 +16,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
   header: {
-    height: '20vh',
+    height: '16vh',
   },
   content: {
-    height: '100%',
+    height: '78vh',
   },
 }));
 
@@ -37,11 +37,12 @@ const MatchDetails = () => {
         </Grid>
       </Grid>
       <Grid className={classes.content} container spacing={3}>
+        <Grid item xs={12} sm={9}>
+          {/* <Paper className={classes.paper}>xs=12</Paper> */}
+          <Chat></Chat>
+        </Grid>
         <Grid item xs={12} sm={3}>
           <Paper className={classes.paper}>xs=6 sm=3</Paper>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Paper className={classes.paper}>xs=12</Paper>
         </Grid>
       </Grid>
     </div>

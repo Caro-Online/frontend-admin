@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import {
+  Tabs,
+  Tab,
+  InputBase,
+  Typography,
+  Box,
+  Paper,
+} from '@material-ui/core';
 
+import SearchIcon from '@material-ui/icons/Search';
+import IconButton from '@material-ui/core/IconButton';
+import SendIcon from '@material-ui/icons/Send';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -43,10 +50,40 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    height: 224,
+    height: '100%',
+    position: 'relative',
+  },
+  rootInput: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: '47vw',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#ecf0f1',
+    height: '40px',
+    borderRadius: '20px',
+    margin: theme.spacing(0, 1, 1),
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+  },
+  typingChat: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+  },
+  contentChat: {
+    position: 'relative',
+    width: '100%',
+  },
+  input: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
   },
 }));
 
@@ -96,6 +133,19 @@ const Chat = () => {
       <TabPanel value={value} index={6}>
         Item Seven
       </TabPanel>
+      <div className={classes.rootInput}>
+        <InputBase
+          className={classes.input}
+          placeholder="Aa"
+          inputProps={{ 'aria-label': 'search google maps' }}
+        />
+        <IconButton
+          type="submit"
+          className={classes.iconButton}
+          aria-label="search">
+          <SendIcon color="primary" />
+        </IconButton>
+      </div>
     </div>
   );
 };
