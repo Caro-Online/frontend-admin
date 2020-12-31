@@ -11,9 +11,12 @@ import {
   Typography,
   makeStyles,
   Button,
+  CardActionArea,
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import GetAppIcon from '@material-ui/icons/GetApp';
+
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,42 +43,50 @@ const useStyles = makeStyles((theme) => ({
 
 const MatchCard = ({ className, match, ...rest }) => {
   const classes = useStyles();
-
+  const navigate = useNavigate();
+  const onClickDetail = (matchId) => {
+    navigate(`/matches/${matchId}`);
+  };
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardContent className={classes.content}>
-        <Typography
-          align="left"
-          color="textPrimary"
-          gutterBottom
-          variant="caption">
-          {match.roomId}
-        </Typography>
-        <Typography align="left" color="textPrimary" variant="h4">
-          {match.name}
-        </Typography>
-      </CardContent>
-      <Box flexGrow={1} />
-      <Divider />
-      <Box p={1}>
-        <Grid container justify="space-between" spacing={2}>
-          <Grid className={classes.statsItem} item>
-            <AccessTimeIcon
-              fontSize="small"
-              className={classes.statsIcon}
-              color="action"
-            />
-            <Typography color="textSecondary" display="inline" variant="body2">
-              {match.status}
-            </Typography>
+      <CardActionArea onClick={(e) => onClickDetail(match._id)}>
+        <CardContent className={classes.content}>
+          <Typography
+            align="left"
+            color="textPrimary"
+            gutterBottom
+            variant="caption">
+            {match.roomId}
+          </Typography>
+          <Typography align="left" color="textPrimary" variant="h4">
+            {match.name}
+          </Typography>
+        </CardContent>
+        <Box flexGrow={1} />
+        <Divider />
+        <Box p={1}>
+          <Grid container justify="space-between" spacing={2}>
+            <Grid className={classes.statsItem} item>
+              <AccessTimeIcon
+                fontSize="small"
+                className={classes.statsIcon}
+                color="action"
+              />
+              <Typography
+                color="textSecondary"
+                display="inline"
+                variant="body2">
+                {match.status}
+              </Typography>
+            </Grid>
+            <Grid className={classes.statsItem} item>
+              <Button variant="outlined" color="secondary">
+                Detail
+              </Button>
+            </Grid>
           </Grid>
-          <Grid className={classes.statsItem} item>
-            <Button variant="outlined" color="secondary">
-              Join
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      </CardActionArea>
     </Card>
   );
 };

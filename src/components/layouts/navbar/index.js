@@ -45,11 +45,11 @@ const items = [
   //   icon: UsersIcon,
   //   title: 'User Details',
   // },
-  {
-    href: '/profile',
-    icon: UserIcon,
-    title: 'Profile',
-  },
+  // {
+  //   href: '/profile',
+  //   icon: UserIcon,
+  //   title: 'Profile',
+  // },
 ];
 
 const useStyles = makeStyles(() => ({
