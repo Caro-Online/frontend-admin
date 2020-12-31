@@ -1,1 +1,1 @@
-export const BaseUrl = process.env.BASE_URL;
+export const BaseUrl = process.env.HOST_API;

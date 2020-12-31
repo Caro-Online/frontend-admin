@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   tableCell: {},
 }));
 
-const Results = ({ className, users, isLoading, ...rest }) => {
+const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
   const classes = useStyles();
   let navigate = useNavigate();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
@@ -57,6 +57,11 @@ const Results = ({ className, users, isLoading, ...rest }) => {
   const onClickDetail = (e, userId) => {
     console.log(`onClickDetail`, userId);
     navigate(`/users/${userId}`);
+  };
+
+  const handleBlock = (e, user) => {
+    e.stopPropagation();
+    onBlock(user);
   };
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
@@ -129,25 +134,13 @@ const Results = ({ className, users, isLoading, ...rest }) => {
                       {moment(user.createdAt).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>
-                      {user?.isBlock ? (
-                        <Button
-                          size="small"
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                          onClick={(e) => alert(e)}>
-                          Bỏ chặn
-                        </Button>
-                      ) : (
-                        <Button
-                          size="small"
-                          variant="contained"
-                          color="secondary"
-                          fullWidth
-                          onClick={(e) => alert(e)}>
-                          Chặn
-                        </Button>
-                      )}
+                      <Button
+                        variant="contained"
+                        color={user?.isBlock ? 'primary' : 'secondary'}
+                        fullWidth
+                        onClick={(e) => handleBlock(e, user)}>
+                        <strong>{user?.isBlock ? 'Bỏ chặn' : 'Chặn'}</strong>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))

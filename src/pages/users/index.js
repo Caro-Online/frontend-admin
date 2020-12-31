@@ -17,16 +17,35 @@ const AUTH_TOKEN = localStorage.getItem('token');
 const CustomerListView = () => {
   const classes = useStyles();
   const [search, setSearch] = useState();
-  const [users, isLoading] = useUserListApi(search);
+  const [users, setUsers, isLoading] = useUserListApi(search);
+  const [updatedUser, setUpdatedUser] = useState(null);
+  const [userInfo, isLoadingUpdate] = useUpdateUserInfoApi(updatedUser);
   const onSearch = (search) => {
     setSearch(search);
     console.log(`onSearch`, search);
+  };
+  const onBlock = (user) => {
+    console.log(`onBlockUser`, user);
+    const isBlock = !user.isBlock;
+    const updatedUser = Object.assign({}, user, { isBlock });
+    setUpdatedUser(updatedUser);
+    const updatedUsers = users.map((userItem) => {
+      if (userItem._id === updatedUser._id) {
+        return updatedUser;
+      }
+      return userItem;
+    });
+    setUsers(updatedUsers);
   };
   return (
     <Container maxWidth={false}>
       <Toolbar onSearch={(e) => onSearch(e, search)} />
       <Box mt={3}>
-        <Results users={users} isLoading={isLoading} />
+        <Results
+          users={users}
+          isLoading={isLoading}
+          onBlock={(user) => onBlock(user)}
+        />
       </Box>
     </Container>
   );
@@ -62,5 +81,32 @@ export const useUserListApi = (keyword = '') => {
   }, [keyword]);
 
   // Return 'isLoading' not the 'setIsLoading' function
-  return [users, isLoading];
+  return [users, setUsers, isLoading];
+};
+
+export const useUpdateUserInfoApi = (user) => {
+  const [userInfo, setUserInfo] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const updateUserInfo = (user) => {
+      if (!user) return;
+      const userId = user._id;
+      if (!userId) return;
+      setIsLoading(true);
+      axiosInstance
+        .put(`/user/${userId}`, { user })
+        .then((res) => {
+          const data = res.data;
+          setUserInfo(data.user);
+          setIsLoading(false);
+          console.log(`updateUserInfo`, data);
+        })
+        .catch((err) => console.error(err));
+    };
+    updateUserInfo(user);
+    // Passing URL as a dependency
+  }, [user]);
+
+  // Return 'isLoading' not the 'setIsLoading' function
+  return [userInfo, isLoading];
 };

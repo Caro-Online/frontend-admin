@@ -3,8 +3,8 @@ import { BaseUrl } from '../configs/api';
 
 const AUTH_TOKEN = localStorage.getItem('token');
 const configs = {
-  baseURL: BaseUrl,
-  timeout: 5000,
+  baseURL: process.env.HOST_API,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
