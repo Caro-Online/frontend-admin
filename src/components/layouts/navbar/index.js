@@ -85,14 +85,14 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Avatar
           className={classes.avatar}
           component={RouterLink}
-          src={user.avatar}
+          src={user?.avatar}
           to="/profile"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {user.name}
+          {user?.name}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {user.jobTitle}
+          {user?.jobTitle}
         </Typography>
       </Box>
       <Divider />

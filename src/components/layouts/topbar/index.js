@@ -31,6 +31,8 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const logOut = () => {
     console.log('i was logout');
     setAuthTokens();
+    localStorage.clear('token');
+    window.location.reload();
   };
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>

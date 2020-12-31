@@ -10,23 +10,30 @@ import { ToastContainer } from 'src/components/toast';
 const App = () => {
   const [authTokens, setAuthTokens] = useState();
   const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
   const setTokens = (data) => {
     console.log(`setTokens`, data);
-    localStorage.setItem('token', data);
-    setAuthTokens(data);
+    if (data) {
+      localStorage.setItem('token', data);
+      setAuthTokens(data);
+      return;
+    }
+    // setToken(data);
     // if (!authTokens) navigate('/login');
   };
   const setUser = (data) => {
     console.log('setUserInfor', data);
-    localStorage.setItem('__user', JSON.stringify(data));
-    setUserInfo(data);
+    if (data) {
+      localStorage.setItem('__user', JSON.stringify(data));
+      setUserInfo(data);
+    }
   };
-
-  // const currentTokens = localStorage.getItem('token');
+  // ! ALERT: Do so bad - cant logout
+  const currentTokens = localStorage.getItem('token');
+  console.log('currentToken');
+  if (!authTokens) setTokens(currentTokens);
   // const routing = useRoutes(routes(currentTokens));
   const routing = useRoutes(routes(authTokens));
-  const navigate = useNavigate();
-
   return (
     <AuthContext.Provider
       value={{
