@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { Paper, Grid } from '@material-ui/core';
 import Chat from 'src/components/chat';
 import AttendCard from 'src/components/matches/card/attend';
 import MatchesHistoryList from 'src/components/matches/list';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import axiosInstance from 'src/services/api';
+import Skeleton from '@material-ui/lab/Skeleton';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -44,12 +44,34 @@ const useStyles = makeStyles((theme) => ({
 const MatchDetails = () => {
   let { matchId } = useParams();
   const classes = useStyles();
-  const [match, setMatch, isLoading] = useMatchDetailApi(matchId);
+  const [room, setRoom, isLoading] = useRoomDetailApi(matchId);
+  const [matches, setMatch, isLoadingMatches] = useMatchListApi(matchId);
+  const match = matches?.length && matches[0];
+  const [curMatch, setCurMatch] = useState(match);
+  const playerInfo = (index, match) => {
+    if (match) {
+    }
+    const iPlayer = room?.players?.length && room?.players[index];
+    const player = {
+      ...iPlayer,
+    };
+    return player;
+  };
+  const onUpdatePlayer = (match) => {
+    setCurMatch(match);
+    console.log('onUpdatePlayer');
+  };
   return (
     <div className={classes.root}>
       <Grid className={classes.header} container spacing={3}>
         <Grid className={classes.userHeader} item xs={12} sm={5}>
-          <AttendCard></AttendCard>
+          {isLoading ? (
+            <Skeleton variant="rect" width={210} height={118} />
+          ) : (
+            <AttendCard
+              player={playerInfo(0, curMatch)}
+              winner={room?.winner}></AttendCard>
+          )}
         </Grid>
         <Grid className={classes.userHeader} item xs={12} sm={2}>
           <div className={classes.summary}>
@@ -58,7 +80,13 @@ const MatchDetails = () => {
           </div>
         </Grid>
         <Grid className={classes.userHeader} item xs={12} sm={5}>
-          <AttendCard></AttendCard>
+          {isLoading ? (
+            <Skeleton variant="rect" width={210} height={118} />
+          ) : (
+            <AttendCard
+              player={playerInfo(1, curMatch)}
+              winner={room?.winner}></AttendCard>
+          )}
         </Grid>
       </Grid>
       <Grid className={classes.content} container spacing={3}>
@@ -69,7 +97,11 @@ const MatchDetails = () => {
           <Paper className={classes.paper} variant="outlined" elevation={0}>
             Danh sách các ván đấu
           </Paper>
-          <MatchesHistoryList />
+          <MatchesHistoryList
+            matches={matches}
+            isLoading={isLoadingMatches}
+            onUpdatePlayer={onUpdatePlayer}
+          />
         </Grid>
       </Grid>
     </div>
@@ -77,28 +109,57 @@ const MatchDetails = () => {
 };
 export default MatchDetails;
 
-export const useMatchDetailApi = (userId) => {
-  const [user, setUser] = useState();
+export const useRoomDetailApi = (id) => {
+  const [match, setMatch] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getUserDetail = () => {
-      if (!userId) return;
+    const getRoomDetail = (id) => {
+      if (!id) return;
       setIsLoading(true);
       axiosInstance
-        .get(`/user/${userId}`)
+        .get(`/room/${id}/detail`)
         .then((res) => {
           const data = res.data;
-          setUser(data.user);
+          setMatch(data.room);
           setIsLoading(false);
-          console.log(`getUserDetail`, data);
+          console.log(`getRoomDetail`, data);
         })
         .catch((err) => console.error(err));
     };
-    getUserDetail();
+    getRoomDetail(id);
     // Passing URL as a dependency
-  }, [userId]);
+  }, [id]);
 
   // Return 'isLoading' not the 'setIsLoading' function
-  return [user, setUser, isLoading];
+  return [match, setMatch, isLoading];
+};
+
+export const useMatchListApi = (roomId) => {
+  const [matches, setMatches] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getMatchesList = (roomId) => {
+      setIsLoading(true);
+      axiosInstance
+        .get(`/match`, {
+          params: {
+            roomId,
+          },
+        })
+        .then((res) => {
+          const data = res.data;
+          setMatches(data.matches);
+          setIsLoading(false);
+          console.log(`getMatchesList`, data);
+        })
+        .catch((err) => console.error(err));
+    };
+    getMatchesList(roomId);
+    // Passing URL as a dependency
+  }, [roomId]);
+
+  // Return 'isLoading' not the 'setIsLoading' function
+  return [matches, setMatches, isLoading];
 };

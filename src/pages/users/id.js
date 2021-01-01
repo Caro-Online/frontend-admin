@@ -428,7 +428,7 @@ export const useMatchedHistoryApi = (userId) => {
         .get(`/match/user/${userId}`)
         .then((res) => {
           const data = res.data;
-          setMatches(data.user);
+          setMatches(data.matches);
           setIsLoading(false);
           console.log(`getMatchesByUserId`, data);
         })

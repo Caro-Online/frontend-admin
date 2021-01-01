@@ -110,105 +110,132 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  emptyCard: {
+    border: '1px solid lightgrey',
+    minHeight: theme.spacing(10),
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
-const AttendCard = (user) => {
+const AttendCard = ({ player, isWinner }) => {
   const classes = useStyles();
+  const user = player?.user;
 
   return (
-    <Card className={classes.root}>
-      <CardContent className={classes.contentHeader}>
-        <Grid container spacing={0}>
-          <Grid item xs={8}>
-            <List className={classes.rootList}>
-              <ListItem alignItems="flex-start" dense>
-                <ListItemAvatar>
-                  <StyledBadge
-                    overlap="circle"
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    variant="dot">
-                    <Avatar
-                      className={classes.large}
-                      alt="Remy Sharp"
-                      src={
-                        user.imageUrl
-                          ? user.imageUrl
-                          : 'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+    <>
+      {user ? (
+        <Card className={classes.root}>
+          <CardContent className={classes.contentHeader}>
+            <Grid container spacing={0}>
+              <Grid item xs={8}>
+                <List className={classes.rootList}>
+                  <ListItem alignItems="flex-start" dense>
+                    <ListItemAvatar>
+                      <StyledBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        variant="dot">
+                        <Avatar
+                          className={classes.large}
+                          alt="Remy Sharp"
+                          src={
+                            user?.imageUrl ||
+                            'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+                          }
+                        />
+                      </StyledBadge>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <Typography
+                            className={classes.name}
+                            gutterBottom
+                            variant="h5"
+                            component="h5">
+                            {user?.name ?? '_'}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.inline}
+                            color="textPrimary">
+                            Tập sự
+                          </Typography>
+                        </React.Fragment>
                       }
                     />
-                  </StyledBadge>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <React.Fragment>
-                      <Typography
-                        className={classes.name}
-                        gutterBottom
-                        variant="h5"
-                        component="h5">
-                        Van Hiep
-                      </Typography>
-                    </React.Fragment>
-                  }
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.inline}
-                        color="textPrimary">
-                        Tập sự
-                      </Typography>
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-            </List>
-          </Grid>
-          <Grid className={classes.status} item xs={4}>
-            <Chip
-              color="primary"
-              label={
-                <span style={{ fontWeight: 700, color: 'white' }}>Thắng</span>
-              }
-            />
-            {/* <Chip
-              color="secondary"
-              variant="outlined"
-              label={<span className={classes.name}>Thua</span>}
-            /> */}
-          </Grid>
-          <Grid className={classes.information} item xs={4}>
-            <div className={classes.summary}>
-              <span style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
-                Số trận đã chơi
-              </span>
-              <strong>30</strong>
-            </div>
-          </Grid>
-          <Grid className={classes.informationMiddle} item xs={4}>
-            <div className={classes.summary}>
-              <span style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
-                Số trận thắng
-              </span>
-              <strong>30</strong>
-            </div>
-          </Grid>
+                  </ListItem>
+                </List>
+              </Grid>
+              <Grid className={classes.status} item xs={4}>
+                {isWinner ? (
+                  <Chip
+                    color="primary"
+                    label={
+                      <span style={{ fontWeight: 700, color: 'white' }}>
+                        Thắng
+                      </span>
+                    }
+                  />
+                ) : (
+                  <Chip
+                    color="secondary"
+                    variant="outlined"
+                    label={<span className={classes.name}>Thua</span>}
+                  />
+                )}
+              </Grid>
+              <Grid className={classes.information} item xs={4}>
+                <div className={classes.summary}>
+                  <span
+                    style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
+                    Số trận đã chơi
+                  </span>
+                  <strong>{user?.matchHavePlayed ?? '_'}</strong>
+                </div>
+              </Grid>
+              <Grid className={classes.informationMiddle} item xs={4}>
+                <div className={classes.summary}>
+                  <span
+                    style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
+                    Số trận thắng
+                  </span>
+                  <strong>{user?.matchHaveWon ?? '_'}</strong>
+                </div>
+              </Grid>
 
-          <Grid className={classes.information} item xs={4}>
-            <div className={classes.summary}>
-              <span style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
-                Số cup
-              </span>
-              <strong>30</strong>
-            </div>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+              <Grid className={classes.information} item xs={4}>
+                <div className={classes.summary}>
+                  <span
+                    style={{ color: 'grey', fontSize: 13, paddingBottom: 3 }}>
+                    Số cup
+                  </span>
+                  <strong>{user?.cup ?? '_'}</strong>
+                </div>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className={classes.emptyCard}>
+          <Typography component="h5" variant="h5">
+            <strong style={{ color: 'lightgray' }}>Trống</strong>
+          </Typography>
+        </Card>
+      )}
+    </>
   );
 };
 export default AttendCard;

@@ -7,6 +7,7 @@ import theme from 'src/theme';
 import routes from 'src/routes';
 import { AuthContext } from 'src/context/auth';
 import { ToastContainer } from 'src/components/toast';
+import axiosInstance from 'src/services/api';
 const App = () => {
   const [authTokens, setAuthTokens] = useState();
   const [userInfo, setUserInfo] = useState(null);
@@ -34,6 +35,10 @@ const App = () => {
   if (!authTokens) setTokens(currentTokens);
   // const routing = useRoutes(routes(currentTokens));
   const routing = useRoutes(routes(authTokens));
+
+  axiosInstance.defaults.headers.common[
+    'Authorization'
+  ] = `Bearer ${authTokens}`;
   return (
     <AuthContext.Provider
       value={{

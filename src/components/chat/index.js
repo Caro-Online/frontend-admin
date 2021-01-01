@@ -26,6 +26,12 @@ const StyledTab = withStyles((theme) => ({
       opacity: 1,
     },
   },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'start',
+  },
 }))((props) => <Tab disableRipple {...props} />);
 const StyledBadge = withStyles((theme) => ({
   badge: {
