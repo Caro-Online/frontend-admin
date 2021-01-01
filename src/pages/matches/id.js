@@ -55,8 +55,6 @@ const MatchDetails = () => {
         ...iPlayer,
       };
       return player;
-      // const isWinner = match.winner ? iPlayer._id === match.winner : f;
-      // return Object.assign({}, player, { isWinner });
     }
     const iPlayer = room?.players?.length > index && room?.players[index];
     const player = {
@@ -92,7 +90,7 @@ const MatchDetails = () => {
         <Grid className={classes.userHeader} item xs={12} sm={2}>
           <div className={classes.summary}>
             <AccessTimeIcon />
-            <span style={{ marginTop: 8 }}>Đang diễn ra</span>
+            <span style={{ marginTop: 8 }}>{room?.status ?? '_'}</span>
           </div>
         </Grid>
         <Grid className={classes.userHeader} item xs={12} sm={5}>

@@ -10,15 +10,21 @@ import {
   List,
   Typography,
   makeStyles,
+  ListItem,
+  Button,
+  Icon,
 } from '@material-ui/core';
 import {
   Target as TargetIcon,
   BarChart as BarChartIcon,
   User as UserIcon,
   Users as UsersIcon,
+  LogOut as LogOutIcon,
 } from 'react-feather';
 import NavItem from './nav-item';
-
+import clsx from 'clsx';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { useAuth } from 'src/context/auth';
 const items = [
   {
     href: '/dashboard',
@@ -30,11 +36,11 @@ const items = [
     icon: TargetIcon,
     title: 'Matches',
   },
-  {
-    href: '/matches/123',
-    icon: TargetIcon,
-    title: 'Match Details',
-  },
+  // {
+  //   href: '/matches/123',
+  //   icon: TargetIcon,
+  //   title: 'Match Details',
+  // },
   {
     href: '/users',
     icon: UsersIcon,
@@ -45,14 +51,9 @@ const items = [
   //   icon: UsersIcon,
   //   title: 'User Details',
   // },
-  // {
-  //   href: '/profile',
-  //   icon: UserIcon,
-  //   title: 'Profile',
-  // },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
     width: 256,
   },
@@ -66,12 +67,47 @@ const useStyles = makeStyles(() => ({
     width: 64,
     height: 64,
   },
+  item: {
+    display: 'flex',
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  button: {
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightMedium,
+    justifyContent: 'flex-start',
+    letterSpacing: 0,
+    padding: '10px 8px',
+    textTransform: 'none',
+    width: '100%',
+  },
+  icon: {
+    marginRight: theme.spacing(1),
+  },
+  title: {
+    marginRight: 'auto',
+  },
+  active: {
+    color: theme.palette.primary.main,
+    '& $title': {
+      fontWeight: theme.typography.fontWeightMedium,
+    },
+    '& $icon': {
+      color: theme.palette.primary.main,
+    },
+  },
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
-
+  const { setAuthTokens } = useAuth();
+  const logOut = () => {
+    console.log('i was logout');
+    setAuthTokens();
+    localStorage.clear('token');
+    window.location.reload();
+  };
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -106,6 +142,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
+          <ListItem disableGutters onClick={logOut}>
+            <Button activeClassName={classes.active} className={classes.button}>
+              <LogOutIcon className={classes.icon} size="20" />
+              <span className={classes.title}>Logout</span>
+            </Button>
+          </ListItem>
         </List>
       </Box>
     </Box>

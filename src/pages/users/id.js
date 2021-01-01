@@ -140,7 +140,7 @@ const UserDetails = () => {
 
   // State will be changed if URL changes
   const [user, setUser, isLoading] = useUserDetailApi(userId);
-  const [matches, isLoadingMatches] = useMatchedHistoryApi(userId);
+  const [matches, setMatches, isLoadingMatches] = useMatchedHistoryApi(userId);
   const [userInfo, isLoadingUpdate] = useUpdateUserInfoApi(user);
   const onBlockUser = (user) => {
     console.log(`onBlockUser`, user);

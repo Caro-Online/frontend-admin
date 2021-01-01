@@ -6,7 +6,7 @@ import { Pagination } from '@material-ui/lab';
 import MatchCard from 'src/components/matches/card';
 import axiosInstance from 'src/services/api';
 import Skeleton from '@material-ui/lab/Skeleton';
-const AUTH_TOKEN = localStorage.getItem('token');
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -86,6 +86,7 @@ export const useMatchesListApi = (keyword = '') => {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setIsLoading(true);
+    const AUTH_TOKEN = localStorage.getItem('token');
     const getMatchesList = () => {
       axiosInstance.defaults.headers.common[
         'Authorization'
