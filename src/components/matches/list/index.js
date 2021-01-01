@@ -10,13 +10,11 @@ import {
   ListItemSecondaryAction,
 } from '@material-ui/core';
 import { FixedSizeList } from 'react-window';
-
 import Skeleton from '@material-ui/lab/Skeleton';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import dayjs from 'dayjs';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Infinite from 'react-infinite';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -28,53 +26,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function renderRow(props) {
-  const { index, style, data } = props;
-  const item = data[index];
-  console.log(`renderRow`, item);
-  return (
-    <ListItem button style={style} key={index}>
-      <ListItemAvatar>
-        <Avatar>
-          <ImageIcon />
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={`Ván đấu ${index + 1}`}
-        secondary={dayjs(item?.createdAt).format('MMM d, YYYY')}
-      />
-      <Avatar
-        style={{ height: 30, backgroundColor: 'lightblue' }}
-        variant="rounded">
-        <span style={{ fontSize: 15, fontFamily: 'Poppins', fontWeight: 800 }}>
-          {item?.history?.length || 0}
-        </span>
-      </Avatar>
-    </ListItem>
-  );
-}
-
-renderRow.propTypes = {
-  index: PropTypes.number.isRequired,
-  style: PropTypes.object.isRequired,
-};
-
-const MatchesHistoryList = ({ matches, isLoading }) => {
+const MatchesHistoryList = ({ matches, isLoading, onSelect }) => {
   const classes = useStyles();
   console.log(`MatchesHistoryList`, matches);
+
   return (
     <div className={classes.root}>
       {isLoading ? (
         <Skeleton variant="rect" height={78} />
       ) : (
-        <FixedSizeList
-          height={630}
-          itemSize={80}
-          itemCount={matches?.length || 1}
-          itemData={matches}
-          isLoading={isLoading}>
-          {renderRow}
-        </FixedSizeList>
+        <Infinite containerHeight={630} elementHeight={40}>
+          {matches?.length &&
+            matches.map((match, index) => (
+              <ListItem button key={index} onClick={(e) => onSelect(match)}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`Ván đấu ${index + 1}`}
+                  secondary={dayjs(match?.createdAt).format('MMM d, YYYY')}
+                />
+                <Avatar
+                  style={{ height: 30, backgroundColor: 'lightblue' }}
+                  variant="rounded">
+                  <span
+                    style={{
+                      fontSize: 15,
+                      fontFamily: 'Poppins',
+                      fontWeight: 800,
+                    }}>
+                    {match?.history?.length || 0}
+                  </span>
+                </Avatar>
+              </ListItem>
+            ))}
+        </Infinite>
       )}
     </div>
   );

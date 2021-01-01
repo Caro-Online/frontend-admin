@@ -46,21 +46,37 @@ const MatchDetails = () => {
   const classes = useStyles();
   const [room, setRoom, isLoading] = useRoomDetailApi(matchId);
   const [matches, setMatch, isLoadingMatches] = useMatchListApi(matchId);
-  const match = matches?.length && matches[0];
-  const [curMatch, setCurMatch] = useState(match);
+  const [curMatch, setCurMatch] = useState(null);
   const playerInfo = (index, match) => {
     if (match) {
+      console.log(`playerInfo`, match);
+      const iPlayer = match?.players?.length > index && match?.players[index];
+      const player = {
+        ...iPlayer,
+      };
+      return player;
+      // const isWinner = match.winner ? iPlayer._id === match.winner : f;
+      // return Object.assign({}, player, { isWinner });
     }
-    const iPlayer = room?.players?.length && room?.players[index];
+    const iPlayer = room?.players?.length > index && room?.players[index];
     const player = {
       ...iPlayer,
     };
     return player;
   };
-  const onUpdatePlayer = (match) => {
+  const onUpdateMatch = (match) => {
     setCurMatch(match);
-    console.log('onUpdatePlayer');
+    console.log('onUpdateMatch', match);
   };
+  const audiences = (room) => {
+    const audiences = room?.audiences ?? [];
+    const users = room?.players?.map((player) => player?.user) ?? [];
+    return [...users, ...audiences];
+  };
+  useEffect(() => {
+    const match = matches?.length && matches[0];
+    onUpdateMatch(match);
+  }, [matches]);
   return (
     <div className={classes.root}>
       <Grid className={classes.header} container spacing={3}>
@@ -70,7 +86,7 @@ const MatchDetails = () => {
           ) : (
             <AttendCard
               player={playerInfo(0, curMatch)}
-              winner={room?.winner}></AttendCard>
+              winner={curMatch?.winner}></AttendCard>
           )}
         </Grid>
         <Grid className={classes.userHeader} item xs={12} sm={2}>
@@ -85,13 +101,13 @@ const MatchDetails = () => {
           ) : (
             <AttendCard
               player={playerInfo(1, curMatch)}
-              winner={room?.winner}></AttendCard>
+              winner={curMatch?.winner}></AttendCard>
           )}
         </Grid>
       </Grid>
       <Grid className={classes.content} container spacing={3}>
         <Grid item xs={12} sm={8}>
-          <Chat></Chat>
+          <Chat users={audiences(room)}></Chat>
         </Grid>
         <Grid item xs={12} sm={4}>
           <Paper className={classes.paper} variant="outlined" elevation={0}>
@@ -100,7 +116,7 @@ const MatchDetails = () => {
           <MatchesHistoryList
             matches={matches}
             isLoading={isLoadingMatches}
-            onUpdatePlayer={onUpdatePlayer}
+            onSelect={onUpdateMatch}
           />
         </Grid>
       </Grid>

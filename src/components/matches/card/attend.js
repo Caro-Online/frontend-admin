@@ -92,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 14,
   },
   information: {
     height: 40,
@@ -121,10 +122,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AttendCard = ({ player, isWinner }) => {
+const AttendCard = ({ player, winner }) => {
   const classes = useStyles();
-  const user = player?.user;
-
+  const user = player?.user ?? player;
+  const isWinner = (user) => {
+    if (!winner) return null;
+    return user._id === winner;
+  };
   return (
     <>
       {user ? (
@@ -146,7 +150,7 @@ const AttendCard = ({ player, isWinner }) => {
                           className={classes.large}
                           alt="Remy Sharp"
                           src={
-                            user?.imageUrl ||
+                            user?.imageUrl ??
                             'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
                           }
                         />
@@ -180,20 +184,21 @@ const AttendCard = ({ player, isWinner }) => {
                 </List>
               </Grid>
               <Grid className={classes.status} item xs={4}>
-                {isWinner ? (
-                  <Chip
-                    color="primary"
-                    label={
-                      <span style={{ fontWeight: 700, color: 'white' }}>
-                        Thắng
-                      </span>
-                    }
-                  />
+                {isWinner(user) === null ? (
+                  <Chip color="default" label="Hoà" />
                 ) : (
                   <Chip
-                    color="secondary"
-                    variant="outlined"
-                    label={<span className={classes.name}>Thua</span>}
+                    color={isWinner(user) ? 'primary' : 'secondary'}
+                    variant={isWinner(user) ? 'default' : 'outlined'}
+                    label={
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: isWinner(user) ? 'white' : null,
+                        }}>
+                        {isWinner(user) ? 'Thắng' : 'Thua'}
+                      </span>
+                    }
                   />
                 )}
               </Grid>

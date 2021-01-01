@@ -124,10 +124,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Chat = () => {
+const Chat = ({ users }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -141,63 +140,32 @@ const Chat = () => {
         onChange={handleChange}
         aria-label="Vertical tabs example"
         className={classes.tabs}>
-        <StyledTab
-          classes={{ wrapper: classes.wrapper }}
-          icon={
-            <StyledBadge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              variant="dot">
-              <Avatar
-                alt="Remy Sharp"
-                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
-              />
-            </StyledBadge>
-          }
-          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
-          {...a11yProps(0)}
-        />
-        <StyledTab
-          classes={{ wrapper: classes.wrapper }}
-          icon={
-            <StyledBadge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              variant="dot">
-              <Avatar
-                alt="Remy Sharp"
-                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
-              />
-            </StyledBadge>
-          }
-          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
-          {...a11yProps(1)}
-        />
-        <StyledTab
-          classes={{ wrapper: classes.wrapper }}
-          icon={
-            <StyledBadge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              variant="dot">
-              <Avatar
-                alt="Remy Sharp"
-                src="https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv"
-              />
-            </StyledBadge>
-          }
-          label={<span style={{ marginLeft: 8 }}>Van Hiep</span>}
-          {...a11yProps(2)}
-        />
+        {users?.length &&
+          users.map((user, i) => (
+            <StyledTab
+              key={i}
+              classes={{ wrapper: classes.wrapper }}
+              icon={
+                <StyledBadge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  variant="dot">
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={
+                      user?.imageUrl ??
+                      'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+                    }
+                  />
+                </StyledBadge>
+              }
+              label={<span style={{ marginLeft: 8 }}>{user?.name}</span>}
+              {...a11yProps(0)}
+            />
+          ))}
       </Tabs>
       <TabPanel value={value} index={0}>
         Item One
