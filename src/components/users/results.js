@@ -52,6 +52,7 @@ const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
   };
 
   const handlePageChange = (event, newPage) => {
+    console.log(newPage, limit);
     setPage(newPage);
   };
   const onClickDetail = (e, userId) => {
@@ -62,6 +63,12 @@ const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
   const handleBlock = (e, user) => {
     e.stopPropagation();
     onBlock(user);
+  };
+  const iEnd = () => {
+    const index = (page + 1) * limit;
+    const length = users?.length;
+    if (length > index) return index;
+    return length;
   };
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
@@ -103,7 +110,7 @@ const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
                   </TableCell>
                 </TableRow>
               ) : users && users.length > 0 ? (
-                users.slice(0, limit).map((user) => (
+                users.slice(page * limit, iEnd()).map((user) => (
                   <TableRow
                     hover
                     key={user._id}
@@ -175,7 +182,7 @@ const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired,
+  // users: PropTypes.array.isRequired,
 };
 
 export default Results;

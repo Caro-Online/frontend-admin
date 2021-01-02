@@ -39,11 +39,11 @@ const Toolbar = ({ className, onSearch, ...rest }) => {
   };
   return (
     <div className={clsx(classes.root, className)} {...rest}>
-      <Box display="flex" justifyContent="flex-end">
+      {/* <Box display="flex" justifyContent="flex-end">
         <Button color="primary" variant="contained">
           Add user
         </Button>
-      </Box>
+      </Box> */}
       <Box mt={3}>
         <Card>
           <CardContent className={classes.content}>

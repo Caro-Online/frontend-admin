@@ -142,6 +142,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
+          <Divider></Divider>
           <ListItem disableGutters onClick={logOut}>
             <Button activeClassName={classes.active} className={classes.button}>
               <LogOutIcon className={classes.icon} size="20" />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -22,7 +22,7 @@ import {
   PlayArrow as PlayArrowIcon,
 } from '@material-ui/icons';
 import axiosInstance from 'src/services/api';
-
+import dayjs from 'dayjs';
 const StyledBadge = withStyles((theme) => ({
   badge: {
     width: 12,
@@ -142,6 +142,7 @@ const UserDetails = () => {
   const [user, setUser, isLoading] = useUserDetailApi(userId);
   const [matches, setMatches, isLoadingMatches] = useMatchedHistoryApi(userId);
   const [userInfo, isLoadingUpdate] = useUpdateUserInfoApi(user);
+  const navigate = useNavigate();
   const onBlockUser = (user) => {
     console.log(`onBlockUser`, user);
     const isBlock = !user.isBlock;
@@ -326,12 +327,14 @@ const UserDetails = () => {
                   <Skeleton variant="rect" width={210} height={118} />
                 ) : matches && matches.length > 0 ? (
                   matches.map((match) => (
-                    <div key={match._id}>
+                    <div
+                      key={match._id}
+                      onClick={() => navigate(`/matches/${match?.room?._id}`)}>
                       <Typography
                         color="textSecondary"
                         variant="body2"
                         align="left">
-                        Jan 7, 2014
+                        {dayjs(match?.createdAt).format('MMM d, YYYY')}
                       </Typography>
                       <Divider />
                       <Card className={classes.rootActivity}>
@@ -343,15 +346,15 @@ const UserDetails = () => {
                         <div className={classes.details}>
                           <CardContent className={classes.content}>
                             <Typography component="h5" variant="h5">
-                              Live From Space
+                              <strong>{match?.room?.name}</strong>
                             </Typography>
                             <Typography
                               variant="subtitle1"
                               color="textSecondary">
-                              Mac Miller
+                              winner: <i>{match?.winner?.name || 'Chưa có'}</i>
                             </Typography>
                           </CardContent>
-                          <div className={classes.controls}>
+                          {/* <div className={classes.controls}>
                             <IconButton aria-label="previous">
                               {theme.direction === 'rtl' ? (
                                 <SkipNextIcon />
@@ -369,7 +372,7 @@ const UserDetails = () => {
                                 <SkipNextIcon />
                               )}
                             </IconButton>
-                          </div>
+                          </div> */}
                         </div>
                       </Card>
                     </div>

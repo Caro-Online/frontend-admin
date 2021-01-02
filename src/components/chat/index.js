@@ -7,32 +7,68 @@ import {
   InputBase,
   Typography,
   Box,
+  TextField,
   Paper,
   Badge,
   Avatar,
+  Grid,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Fab,
 } from '@material-ui/core';
 
-import SearchIcon from '@material-ui/icons/Search';
+// import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
-const StyledTab = withStyles((theme) => ({
-  root: {
-    textTransform: 'none',
-    color: 'black',
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.pxToRem(15),
-    marginRight: theme.spacing(1),
-    '&:focus': {
-      opacity: 1,
-    },
+
+const useStyles = makeStyles((theme) => ({
+  table: {
+    minWidth: 650,
   },
-  wrapper: {
+  chatSection: {
+    width: '100%',
+    height: '76vh',
+  },
+  headBG: {
+    backgroundColor: '#e0e0e0',
+  },
+  borderRight500: {
+    borderRight: '1px solid #e0e0e0',
+    backgroundColor: '#efefef',
+  },
+  messageArea: {
+    height: '70vh',
+    overflowY: 'auto',
+    backgroundColor: '#ecf3f5',
+  },
+  input: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  rootInput: {
+    padding: '2px 4px',
     display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'start',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ecf0f1',
+    height: '40px',
+    borderRadius: '20px',
+    margin: theme.spacing(1),
   },
-}))((props) => <Tab disableRipple {...props} />);
+  content: {
+    position: 'relative',
+  },
+}));
+
 const StyledBadge = withStyles((theme) => ({
   badge: {
     width: 8,
@@ -43,86 +79,6 @@ const StyledBadge = withStyles((theme) => ({
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
   },
 }))(Badge);
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}>
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    height: '100%',
-    position: 'relative',
-  },
-  rootInput: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: '47vw',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#ecf0f1',
-    height: '40px',
-    borderRadius: '20px',
-    margin: theme.spacing(0, 1, 1),
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    display: 'flex',
-  },
-  typingChat: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-  },
-  contentChat: {
-    position: 'relative',
-    width: '100%',
-  },
-  input: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'start',
-  },
-}));
 
 const Chat = ({ users }) => {
   const classes = useStyles();
@@ -130,67 +86,92 @@ const Chat = ({ users }) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   return (
-    <div className={classes.root}>
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        className={classes.tabs}>
-        {users?.length &&
-          users.map((user, i) => (
-            <StyledTab
-              key={i}
-              classes={{ wrapper: classes.wrapper }}
-              icon={
-                <StyledBadge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  variant="dot">
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={
-                      user?.imageUrl ??
-                      'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
-                    }
-                  />
-                </StyledBadge>
-              }
-              label={<span style={{ marginLeft: 8 }}>{user?.name}</span>}
-              {...a11yProps(0)}
+    <div>
+      <Grid container component={Paper} className={classes.chatSection}>
+        <Grid item xs={3} className={classes.borderRight500}>
+          <List>
+            {users?.length &&
+              users.map((user, i) => (
+                <ListItem key={i} button>
+                  <ListItemIcon>
+                    <StyledBadge
+                      overlap="circle"
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                      }}
+                      variant="dot">
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={
+                          user?.imageUrl ??
+                          'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+                        }
+                      />
+                    </StyledBadge>
+                  </ListItemIcon>
+                  <ListItemText primary={user?.name}>{user?.name}</ListItemText>
+                </ListItem>
+              ))}
+          </List>
+        </Grid>
+        <Grid item xs={9} className={classes.content}>
+          <List className={classes.messageArea}>
+            <ListItem key="1" className={classes.message}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <ListItemText
+                    align="right"
+                    primary="Hey man, What's up ?"></ListItemText>
+                </Grid>
+                <Grid item xs={12}>
+                  <ListItemText align="right" secondary="09:30"></ListItemText>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <ListItem key="2">
+              <Grid container>
+                <Grid item xs={12}>
+                  <ListItemText
+                    align="left"
+                    primary="Hey, Iam Good! What about you ?"></ListItemText>
+                </Grid>
+                <Grid item xs={12}>
+                  <ListItemText align="left" secondary="09:31"></ListItemText>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <ListItem key="3">
+              <Grid container>
+                <Grid item xs={12}>
+                  <ListItemText
+                    align="right"
+                    primary="Cool. i am good, let's catch up!"></ListItemText>
+                </Grid>
+                <Grid item xs={12}>
+                  <ListItemText align="right" secondary="10:30"></ListItemText>
+                </Grid>
+              </Grid>
+            </ListItem>
+          </List>
+          <div className={classes.rootInput}>
+            <InputBase
+              className={classes.input}
+              placeholder="Aa"
+              inputProps={{ 'aria-label': 'search google maps' }}
             />
-          ))}
-      </Tabs>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-
-      <div className={classes.rootInput}>
-        <InputBase
-          className={classes.input}
-          placeholder="Aa"
-          inputProps={{ 'aria-label': 'search google maps' }}
-        />
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search">
-          <SendIcon color="primary" />
-        </IconButton>
-      </div>
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search">
+              <SendIcon color="primary" />
+            </IconButton>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };
+
 export default Chat;

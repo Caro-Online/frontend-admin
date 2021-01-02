@@ -37,6 +37,21 @@ const useStyles = makeStyles((theme) => ({
 const Matches = () => {
   const classes = useStyles();
   const [matches, setMatches, isLoading] = useMatchesListApi('');
+  const [limit, setLimit] = useState(12);
+  const [page, setPage] = useState(1);
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+  const iEnd = () => {
+    const index = page * limit;
+    const length = matches?.length;
+    if (length > index) return index;
+    return length;
+  };
+  const count = () => {
+    const length = matches?.length || 1;
+    return Math.ceil(length / limit);
+  };
   return (
     <Container maxWidth={false}>
       <Box mt={3}>
@@ -58,8 +73,8 @@ const Matches = () => {
             <Grid item lg={4} md={6} xs={12}>
               <Skeleton variant="rect" width={210} height={118} />
             </Grid>
-          ) : matches && matches.length > 0 ? (
-            matches.map((match) => (
+          ) : matches?.length > 0 ? (
+            matches.slice((page - 1) * limit, iEnd()).map((match) => (
               <Grid item key={match._id} lg={4} md={6} xs={12}>
                 <MatchCard className={classes.matchCard} match={match} />
               </Grid>
@@ -74,7 +89,15 @@ const Matches = () => {
         </Grid>
       </Box>
       <Box mt={3} display="flex" justifyContent="center">
-        <Pagination color="primary" count={3} size="small" />
+        <Pagination
+          color="primary"
+          count={count()}
+          size="small"
+          onChange={handlePageChange}
+          page={page}
+          hidePrevButton
+          hideNextButton
+        />
       </Box>
     </Container>
   );
