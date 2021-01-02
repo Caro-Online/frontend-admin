@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { BaseUrl } from '../configs/api';
-
 const AUTH_TOKEN = localStorage.getItem('token');
 const configs = {
-  baseURL: process.env.HOST_API,
+  baseURL: process.env.REACT_APP_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
