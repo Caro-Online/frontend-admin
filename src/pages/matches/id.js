@@ -66,10 +66,14 @@ const MatchDetails = () => {
     setCurMatch(match);
     console.log('onUpdateMatch', match);
   };
-  const audiences = (room) => {
+  const audiences = (room, match) => {
+    let players = [];
+    if (match) {
+      players = match.players;
+    }
     const audiences = room?.audiences ?? [];
     const users = room?.players?.map((player) => player?.user) ?? [];
-    return [...users, ...audiences];
+    return [...users, ...audiences, ...players];
   };
   useEffect(() => {
     const match = matches?.length && matches[0];
@@ -105,7 +109,9 @@ const MatchDetails = () => {
       </Grid>
       <Grid className={classes.content} container spacing={3}>
         <Grid item xs={12} sm={8}>
-          <Chat users={audiences(room)}></Chat>
+          <Chat
+            users={audiences(room, curMatch)}
+            messages={room?.chat || []}></Chat>
         </Grid>
         <Grid item xs={12} sm={4}>
           <Paper className={classes.paper} variant="outlined" elevation={0}>

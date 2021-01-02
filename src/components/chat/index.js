@@ -13,17 +13,22 @@ import {
   Avatar,
   Grid,
   Divider,
+  CardContent,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Fab,
+  CardHeader,
+  Tooltip,
+  Card,
 } from '@material-ui/core';
 
 // import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
-
+import { MoreVert as MoreVertIcon } from '@material-ui/icons';
+import dayjs from 'dayjs';
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
@@ -67,6 +72,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     position: 'relative',
   },
+  cardMessage: {
+    borderRadius: 15,
+  },
 }));
 
 const StyledBadge = withStyles((theme) => ({
@@ -80,7 +88,7 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const Chat = ({ users }) => {
+const Chat = ({ users, messages }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -118,42 +126,58 @@ const Chat = ({ users }) => {
         </Grid>
         <Grid item xs={9} className={classes.content}>
           <List className={classes.messageArea}>
-            <ListItem key="1" className={classes.message}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="right"
-                    primary="Hey man, What's up ?"></ListItemText>
+            {messages?.map((message, index) => (
+              <ListItem key={index} className={classes.message}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-end">
+                  <StyledBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    variant="dot">
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={
+                        message?.user?.imageUrl ??
+                        'https://64.media.tumblr.com/f6514ff303f6a7e6cc2aea9783c0b676/tumblr_inline_pgpymmeSG41rl9zyi_400.gifv'
+                      }
+                    />
+                  </StyledBadge>
+                  <div
+                    style={{
+                      padding: '0 16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                    }}>
+                    <small
+                      style={{
+                        fontSize: 12,
+                        padding: '0 8px',
+                        marginBottom: 2,
+                      }}>
+                      {message?.user?.name}
+                    </small>
+                    <Tooltip
+                      title={dayjs(message?.createdAt).format('HH:mm')}
+                      placement="right">
+                      <Card className={classes.cardMessage} elevation={0}>
+                        <div style={{ padding: '6px 16px' }}>
+                          <Typography variant="body2" component="p">
+                            {message?.content}
+                          </Typography>
+                        </div>
+                      </Card>
+                    </Tooltip>
+                  </div>
                 </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="09:30"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="2">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="left"
-                    primary="Hey, Iam Good! What about you ?"></ListItemText>
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="left" secondary="09:31"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="3">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="right"
-                    primary="Cool. i am good, let's catch up!"></ListItemText>
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="10:30"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
+              </ListItem>
+            ))}
           </List>
           <div className={classes.rootInput}>
             <InputBase
