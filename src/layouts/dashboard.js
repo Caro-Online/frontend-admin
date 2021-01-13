@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 export const Layout = () => {
   const classes = useStyles();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-  const token = localStorage.getItem('token');
   // if (!token) {
   //   return <Navigate to="/login" />;
   // }

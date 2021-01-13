@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AUTH_TOKEN = localStorage.getItem('token');
 const CustomerListView = () => {
   const classes = useStyles();
   const [search, setSearch] = useState();
