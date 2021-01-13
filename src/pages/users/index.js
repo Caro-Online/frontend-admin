@@ -61,11 +61,11 @@ export const useUserListApi = (keyword = '') => {
   useEffect(() => {
     const getUserList = (keyword) => {
       setIsLoading(true);
+      let params = {};
+      if (keyword) params = { keyword };
       axiosInstance
         .get(`/user`, {
-          params: {
-            keyword,
-          },
+          params,
         })
         .then((res) => {
           const data = res.data;
