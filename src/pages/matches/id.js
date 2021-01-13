@@ -8,6 +8,7 @@ import MatchesHistoryList from 'src/components/matches/list';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import axiosInstance from 'src/services/api';
 import Skeleton from '@material-ui/lab/Skeleton';
+const _ = require('lodash');
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -73,7 +74,8 @@ const MatchDetails = () => {
     }
     const audiences = room?.audiences ?? [];
     const users = room?.players?.map((player) => player?.user) ?? [];
-    return [...users, ...audiences, ...players];
+    const uniqueUser = _.uniqBy([...users, ...audiences, ...players], '_id');
+    return uniqueUser;
   };
   useEffect(() => {
     const match = matches?.length && matches[0];
