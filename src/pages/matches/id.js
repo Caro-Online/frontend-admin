@@ -113,7 +113,7 @@ const MatchDetails = () => {
         <Grid item xs={12} sm={8}>
           <Chat
             users={audiences(room, curMatch)}
-            messages={room?.chat || []}></Chat>
+            messages={curMatch?.chat ? curMatch?.chat : room?.chat}></Chat>
         </Grid>
         <Grid item xs={12} sm={4}>
           <Paper className={classes.paper} variant="outlined" elevation={0}>
