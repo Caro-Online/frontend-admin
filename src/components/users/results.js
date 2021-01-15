@@ -118,7 +118,7 @@ const Results = ({ className, users, isLoading, onBlock, ...rest }) => {
                     onClick={(e) => onClickDetail(e, user._id)}>
                     <TableCell>
                       <Box alignItems="center" display="flex">
-                        <Avatar className={classes.avatar} src={user.avatarUrl}>
+                        <Avatar className={classes.avatar} src={user.imageUrl}>
                           {user.name
                             .replace(/\s+/, ' ')
                             .split(' ')

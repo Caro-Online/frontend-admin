@@ -6,6 +6,7 @@
     "tabWidth": 2,
     "useTabs": false,
     "semi": true,
+     "endOfLine":"auto",
     "jsxBracketSameLine": true,
     "react/jsx-max-props-per-line": [
         1,
