@@ -109,7 +109,7 @@ const Chat = ({ users, messages }) => {
                         vertical: 'bottom',
                         horizontal: 'right',
                       }}
-                      variant="dot">
+                      variant={user?.status !== 'OFFLINE' ? 'dot' : null}>
                       <Avatar
                         alt="Remy Sharp"
                         src={
@@ -139,7 +139,9 @@ const Chat = ({ users, messages }) => {
                       vertical: 'bottom',
                       horizontal: 'right',
                     }}
-                    variant="dot">
+                    variant={
+                      message?.user?.status !== 'OFFLINE' ? 'dot' : null
+                    }>
                     <Avatar
                       alt="Remy Sharp"
                       src={

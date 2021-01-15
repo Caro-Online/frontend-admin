@@ -46,7 +46,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
             <Badge
               badgeContent={notifications.length}
               color="primary"
-              variant="dot">
+             variant={user?.status !== 'OFFLINE' ? 'dot' : null}>
               <NotificationsIcon />
             </Badge>
           </IconButton> */}

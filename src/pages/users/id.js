@@ -176,7 +176,7 @@ const UserDetails = () => {
                       vertical: 'bottom',
                       horizontal: 'right',
                     }}
-                    variant="dot">
+                    variant={user?.status !== 'OFFLINE' ? 'dot' : null}>
                     <Avatar
                       className={classes.large}
                       alt="Remy Sharp"

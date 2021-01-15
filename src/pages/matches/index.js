@@ -115,7 +115,11 @@ export const useMatchesListApi = (keyword = '') => {
         'Authorization'
       ] = `Bearer ${AUTH_TOKEN}`;
       axiosInstance
-        .get('/room')
+        .get('/room', {
+          params: {
+            isFull: true,
+          },
+        })
         .then((res) => {
           const data = res.data;
           setMatches(data.rooms);
