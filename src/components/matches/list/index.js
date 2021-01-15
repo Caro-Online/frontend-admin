@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
 const MatchesHistoryList = ({ matches, isLoading, onSelect }) => {
   const classes = useStyles();
   console.log(`MatchesHistoryList`, matches);
-
+  const height = window.innerHeight - 64 - 150 - 40 - 52;
   return (
     <div className={classes.root}>
       {isLoading ? (
         <Skeleton variant="rect" height={78} />
       ) : (
-        <Infinite containerHeight={630} elementHeight={40}>
+        <Infinite containerHeight={height} elementHeight={40}>
           {matches?.length &&
             matches.map((match, index) => (
               <ListItem button key={index} onClick={(e) => onSelect(match)}>

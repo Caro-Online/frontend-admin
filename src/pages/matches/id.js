@@ -108,8 +108,6 @@ const MatchDetails = () => {
               winner={curMatch?.winner}></AttendCard>
           )}
         </Grid>
-      </Grid>
-      <Grid className={classes.content} container spacing={3}>
         <Grid item xs={12} sm={8}>
           <Chat
             users={audiences(room, curMatch)}
